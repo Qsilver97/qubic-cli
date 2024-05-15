@@ -669,7 +669,25 @@ void parseArgument(int argc, char** argv){
             CHECK_OVER_PARAMETERS
             break;
         }
-
+        if(strcmp(argv[i], "-qairdropstartairdrop") == 0)
+        {
+            g_cmd = QAIRDROP_START_AIRDROP;
+            g_airdrop_assetName = argv[i+1];
+            g_airdrop_numberOfShares = charToNumber(argv[i+2]);
+            g_airdrop_unitOfMeasurement = argv[i+3];
+            g_airdrop_numberOfDecimalPlaces = charToNumber(argv[i+4]);
+            i+=5;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qairdroptransferasset") == 0)
+        {
+            g_cmd = QARIDROP_TRANSFER_ASSET;
+            g_qairdrop_asset_transfer_asset_name = argv[i + 1];
+            i+=2;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
         i++;
     }
     if (g_configFile != nullptr)

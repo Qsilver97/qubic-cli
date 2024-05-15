@@ -51,7 +51,9 @@ enum COMMAND
     QX_ORDER=43,
     QX_GET_ORDER=44,
     GET_MINING_SCORE_RANKING=45,
-    SEND_COIN_IN_TICK = 46
+    SEND_COIN_IN_TICK = 46,
+    QAIRDROP_START_AIRDROP=47,
+    QARIDROP_TRANSFER_ASSET=48
 };
 
 struct RequestResponseHeader {
@@ -382,6 +384,18 @@ typedef struct
 {
     unsigned char peers[4][4];
 } ExchangePublicPeers;
+
+
+struct Fees_output
+{
+    unsigned int airdropStartFee; // Number of billionths
+    unsigned int transferFee; // Number of billionths
+    unsigned int assetIssuanceFee; // Number of billionths
+    static constexpr unsigned char type()
+    {
+        return 43;
+    }
+};
 
 struct RequestLog // Fetches log
 {

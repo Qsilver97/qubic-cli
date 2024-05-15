@@ -98,6 +98,12 @@ Command:
 	-qxgetorder entity/asset bid/ask [ISSUER/ENTITY (in qubic format)] [ASSET_NAME (NULL for requesting entity)] [OFFSET]
 		Get orders on Qx
 
+[QAIRDROP COMMAND]
+    -qairdropstartairdrop <ASSET_NAME> <NUMBER_OF_UNIT> <UNIT_OF_MEASUREMENT> <NUM_DECIMAL>
+        Create an asset for airdrop via Airdrop contract.
+    -qairdroptransferasset <ASSET_NAME>
+        Transfer an airdrop asset via Airdrop contract.
+
 [QTRY COMMAND]
 	-qtrygetfee
 		Show current qtry fee.
