@@ -6,7 +6,7 @@
 #define SIGNATURE_SIZE 64
 #define SPECTRUM_DEPTH 24 // Is derived from SPECTRUM_CAPACITY (=N)
 #define ASSETS_DEPTH 24 // Is derived from ASSETS_CAPACITY (=N)
-#define DEFAULT_SEED "owtgeiwsnkjuoljcsxyczldftcdcqjmxyqvgvthufjriayrrzmacokf"
+#define DEFAULT_SEED "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 #define ARBITRATOR "AFZPUAIYVPNUYGJRQVLUKOPPVLHAZQTGLYAAUUNBXFTVTAMSBKQBLEIEPCVJ"
 #define NUMBER_OF_COMPUTORS 676
 #define EXCHANGE_PUBLIC_PEERS 0
