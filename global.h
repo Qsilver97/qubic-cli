@@ -74,5 +74,6 @@ int64_t g_airdrop_numberOfShares = -1;
 char g_airdrop_numberOfDecimalPlaces = 0;
 
 char* g_qairdrop_asset_transfer_asset_name;
+char* g_qairdrop_asset_issuer = nullptr;
 
 uint64_t g_get_log_passcode[4] = {0};
