@@ -66,5 +66,13 @@ uint64_t g_quottery_amount_per_bet_slot;
 uint32_t g_quottery_picked_option;
 
 char* g_qutil_sendtomanyv1_payout_list_file = nullptr;
+char* g_qairdrop_qairdrop_payout_list_file = nullptr;
+
+char* g_airdrop_assetName = nullptr;
+char* g_airdrop_unitOfMeasurement = nullptr;
+int64_t g_airdrop_numberOfShares = -1;
+char g_airdrop_numberOfDecimalPlaces = 0;
+
+char* g_qairdrop_asset_transfer_asset_name;
 
 uint64_t g_get_log_passcode[4] = {0};

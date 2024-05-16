@@ -10,6 +10,7 @@ SET(FILES ${CMAKE_SOURCE_DIR}/connection.cpp
 		  ${CMAKE_SOURCE_DIR}/SCUtils.cpp
 		  ${CMAKE_SOURCE_DIR}/quottery.cpp
 		  ${CMAKE_SOURCE_DIR}/qutil.cpp
+		  ${CMAKE_SOURCE_DIR}/qairdrop.cpp
 		  ${CMAKE_SOURCE_DIR}/qx.cpp
 )
 SET(HEADER_FILES
@@ -31,6 +32,7 @@ SET(HEADER_FILES
 	sanityCheck.h
 	structs.h
 	utils.h
+	qairdrop.h
 	walletUtils.h
 )
 ADD_EXECUTABLE(qubic-cli main.cpp ${FILES} ${HEADER_FILES})

@@ -182,5 +182,6 @@ template SpecialCommandToggleMainModeResquestAndResponse QubicConnection::receiv
 template SpecialCommandSetSolutionThresholdResquestAndResponse QubicConnection::receivePacketAs<SpecialCommandSetSolutionThresholdResquestAndResponse>();
 template SpecialCommandSendTime QubicConnection::receivePacketAs<SpecialCommandSendTime>();
 template GetSendToManyV1Fee_output QubicConnection::receivePacketAs<GetSendToManyV1Fee_output>();
+template Fees_output QubicConnection::receivePacketAs<Fees_output>();
 
 template std::vector<Tick> QubicConnection::getLatestVectorPacketAs<Tick>();

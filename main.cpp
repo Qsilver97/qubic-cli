@@ -11,6 +11,7 @@
 #include "quottery.h"
 #include "qutil.h"
 #include "qx.h"
+#include "qairdrop.h"
 
 int run(int argc, char* argv[])
 {
@@ -279,6 +280,29 @@ int run(int argc, char* argv[])
             sanityCheckSeed(g_seed);
             sanityFileExist(g_qutil_sendtomanyv1_payout_list_file);
             qutilSendToManyV1(g_nodeIp, g_nodePort, g_seed, g_qutil_sendtomanyv1_payout_list_file, g_offsetScheduledTick);
+            break;
+            case QAIRDROP_START_AIRDROP:
+            sanityCheckNode(g_nodeIp, g_nodePort);
+            sanityCheckSeed(g_seed);
+            sanityCheckNumberOfUnit(g_airdrop_numberOfShares);
+            sanityCheckValidString(g_airdrop_assetName);
+            sanityCheckValidString(g_airdrop_unitOfMeasurement);
+            sanityCheckNumberOfDecimal(g_airdrop_numberOfDecimalPlaces);
+            qairdropStartAirdrop(g_nodeIp, g_nodePort, g_seed,
+                         g_airdrop_assetName,
+                         g_airdrop_unitOfMeasurement,
+                         g_airdrop_numberOfShares,
+                         g_airdrop_numberOfDecimalPlaces,
+                         g_offsetScheduledTick);
+            break;
+        case QARIDROP_TRANSFER_ASSET:
+            sanityCheckNode(g_nodeIp, g_nodePort);
+            sanityCheckSeed(g_seed);
+            sanityCheckValidString(g_qairdrop_asset_transfer_asset_name);
+            DistributeToken(g_nodeIp, g_nodePort, g_seed,
+                            g_qairdrop_asset_transfer_asset_name,
+                            g_offsetScheduledTick
+                            );
             break;
         default:
             printf("Unexpected command!\n");
