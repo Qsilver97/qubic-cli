@@ -87,7 +87,7 @@ void StartAirdrop_func(const char* nodeIp, int nodePort,
     } packet;
     memcpy(packet.transaction.sourcePublicKey, sourcePublicKey, 32);
     memcpy(packet.transaction.destinationPublicKey, destPublicKey, 32);
-    packet.transaction.amount = 1500000000;
+    packet.transaction.amount = 1000000000;
     uint32_t scheduledTick = 0;
     if (scheduledTickOffset < 50000){
         uint32_t currentTick = getTickNumberFromNode(qc);
