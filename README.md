@@ -101,7 +101,7 @@ Command:
 [QAIRDROP COMMAND]
     -qairdropstartairdrop <ASSET_NAME> <NUMBER_OF_UNIT> <UNIT_OF_MEASUREMENT> <NUM_DECIMAL>
         Create an asset for airdrop via Airdrop contract.
-    -qairdroptransferasset <ASSET_NAME>
+    -qairdroptransferasset <ASSET_NAME> <ISSUER_IN_HEX>
         Transfer an airdrop asset via Airdrop contract.
 
 [QTRY COMMAND]

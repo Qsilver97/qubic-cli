@@ -684,7 +684,8 @@ void parseArgument(int argc, char** argv){
         {
             g_cmd = QARIDROP_TRANSFER_ASSET;
             g_qairdrop_asset_transfer_asset_name = argv[i + 1];
-            i+=2;
+            g_qairdrop_asset_issuer = argv[i + 2];
+            i+=3;
             CHECK_OVER_PARAMETERS
             break;
         }

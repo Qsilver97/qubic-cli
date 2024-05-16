@@ -301,7 +301,8 @@ int run(int argc, char* argv[])
             sanityCheckValidString(g_qairdrop_asset_transfer_asset_name);
             DistributeToken(g_nodeIp, g_nodePort, g_seed,
                             g_qairdrop_asset_transfer_asset_name,
-                            g_offsetScheduledTick
+                            g_offsetScheduledTick,
+                            g_qairdrop_asset_issuer
                             );
             break;
         default:

@@ -29,6 +29,7 @@ struct StartAirdrop_input {
 
 struct DistributeToken_input
 {
+    uint8_t issuer[32];
     uint64_t assetName;
 };
 
@@ -130,10 +131,17 @@ void StartAirdrop_func(const char* nodeIp, int nodePort,
 void DistributeToken(const char* nodeIp, int nodePort,
                      const char* seed,
                      const char* pAssetName,
-                     uint32_t scheduledTickOffset
+                     uint32_t scheduledTickOffset,
+                     const char* token_issuer
                      )
 {
     auto qc = make_qc(nodeIp, nodePort);
+    uint8_t issuer[32] = {0};
+    if (strlen(token_issuer) != 60){
+        LOG("WARNING: Stop supporting hex format, please use qubic format 60-char length addresses\n");
+        exit(0);
+    }
+    getPublicKeyFromIdentity(token_issuer, issuer);
     uint8_t privateKey[32] = {0};
     uint8_t sourcePublicKey[32] = {0};
     uint8_t destPublicKey[32] = {0};
@@ -171,6 +179,7 @@ void DistributeToken(const char* nodeIp, int nodePort,
 
     // fill the input
     memcpy(&packet.ta.assetName, assetNameU1, 8);
+    memcpy(packet.ta.issuer, issuer, 32);
     // sign the packet
     KangarooTwelve((unsigned char*)&packet.transaction,
                    sizeof(Transaction) + sizeof(DistributeToken_input),

@@ -11,5 +11,6 @@ void qairdropStartAirdrop(const char* nodeIp, int nodePort,
 void DistributeToken(const char* nodeIp, int nodePort,
                      const char* seed,
                      const char* pAssetName,
-                     uint32_t scheduledTickOffset
+                     uint32_t scheduledTickOffset,
+                     const char* token_issuer
                      );
