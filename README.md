@@ -103,6 +103,8 @@ Command:
         Create an asset for airdrop via Airdrop contract.
     -qairdroptransferasset <ASSET_NAME> <ISSUER_IN_HEX>
         Transfer an airdrop asset via Airdrop contract.
+	-qairdroponetransferasset <ASSET_NAME> <ISSUER_IN_HEX> <NEW_OWNER_IDENTITY> <AMOUNT_OF_SHARE>
+		Transfer an asset via Airdrop contract.
 
 [QTRY COMMAND]
 	-qtrygetfee

@@ -689,6 +689,17 @@ void parseArgument(int argc, char** argv){
             CHECK_OVER_PARAMETERS
             break;
         }
+        if(strcmp(argv[i], "-qairdroponetransferasset") == 0)
+        {
+            g_cmd = QARIDROP_ONE_TRANSFER_ASSET;
+            g_qairdrop_one_asset_transfer_asset_name = argv[i+1];
+            g_qairdrop_one_asset_transfer_issuer_in_hex = argv[i+2];
+            g_qairdrop_one_asset_transfer_new_owner_identity = argv[i+3];
+            g_qairdrop_one_asset_transfer_amount = charToNumber(argv[i+4]);
+            i+=5;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
         i++;
     }
     if (g_configFile != nullptr)

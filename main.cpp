@@ -305,6 +305,20 @@ int run(int argc, char* argv[])
                             g_qairdrop_asset_issuer
                             );
             break;
+        case QARIDROP_ONE_TRANSFER_ASSET:
+        sanityCheckNode(g_nodeIp, g_nodePort);
+        sanityCheckSeed(g_seed);
+        sanityCheckNumberOfUnit(g_qairdrop_one_asset_transfer_amount);
+        sanityCheckValidString(g_qairdrop_one_asset_transfer_asset_name);
+        sanityCheckValidString(g_qairdrop_one_asset_transfer_issuer_in_hex);
+        sanityCheckIdentity(g_qairdrop_one_asset_transfer_new_owner_identity);
+        AirdropOneTransferAsset(g_nodeIp, g_nodePort, g_seed,
+                        g_qairdrop_one_asset_transfer_asset_name,
+                        g_qairdrop_one_asset_transfer_issuer_in_hex,
+                        g_qairdrop_one_asset_transfer_new_owner_identity,
+                        g_qairdrop_one_asset_transfer_amount,
+                        g_offsetScheduledTick);
+        break;
         default:
             printf("Unexpected command!\n");
             break;
