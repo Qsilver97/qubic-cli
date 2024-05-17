@@ -14,3 +14,11 @@ void DistributeToken(const char* nodeIp, int nodePort,
                      uint32_t scheduledTickOffset,
                      const char* token_issuer
                      );
+
+void AirdropOneTransferAsset(const char* nodeIp, int nodePort,
+                    const char* seed,
+                    const char* pAssetName,
+                    const char* pIssuerInQubicFormat,
+                    const char* newOwnerIdentity,
+                    long long numberOfUnits,
+                    uint32_t scheduledTickOffset);

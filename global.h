@@ -76,4 +76,9 @@ char g_airdrop_numberOfDecimalPlaces = 0;
 char* g_qairdrop_asset_transfer_asset_name;
 char* g_qairdrop_asset_issuer = nullptr;
 
+char* g_qairdrop_one_asset_transfer_asset_name = nullptr;;
+char* g_qairdrop_one_asset_transfer_issuer_in_hex;
+char* g_qairdrop_one_asset_transfer_new_owner_identity = nullptr;
+int64_t g_qairdrop_one_asset_transfer_amount = -1;
+
 uint64_t g_get_log_passcode[4] = {0};
