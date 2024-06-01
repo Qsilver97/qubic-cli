@@ -81,4 +81,24 @@ char* g_qairdrop_one_asset_transfer_issuer_in_hex;
 char* g_qairdrop_one_asset_transfer_new_owner_identity = nullptr;
 int64_t g_qairdrop_one_asset_transfer_amount = -1;
 
+int64_t g_qpool_create_number_of_token = 0;
+char* g_qpool_enable_asset_name;
+char* g_qpool_enable_asset_issur;
+int64_t g_qpool_amount_of_qwallet;
+int64_t g_qpool_amount_of_qu;
+int8_t g_qpool_weight_of_qwallet;
+int64_t g_qpool_amount_of_token[8];
+int8_t g_qpool_weight_of_token[8];
+int16_t g_qpool_index_of_token[8];
+int64_t g_qpool_swap_fee;
+char* g_qpool_LPname;
+uint16_t g_qool_tokenID_in_pool;
+
+char* g_pool_assetName = nullptr;
+char* g_pool_unitOfMeasurement = nullptr;
+int64_t g_pool_numberOfShares = -1;
+char g_pool_numberOfDecimalPlaces = 0;
+
+int64_t g_qpool_get_infor_number_of_pool = 0;
+
 uint64_t g_get_log_passcode[4] = {0};

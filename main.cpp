@@ -12,6 +12,7 @@
 #include "qutil.h"
 #include "qx.h"
 #include "qairdrop.h"
+#include "qpool.h"
 
 int run(int argc, char* argv[])
 {
@@ -317,6 +318,63 @@ int run(int argc, char* argv[])
                         g_qairdrop_one_asset_transfer_issuer_in_hex,
                         g_qairdrop_one_asset_transfer_new_owner_identity,
                         g_qairdrop_one_asset_transfer_amount,
+                        g_offsetScheduledTick);
+        case QPOOL_CREATE:
+        sanityCheckNode(g_nodeIp, g_nodePort);
+        sanityCheckSeed(g_seed);
+        QpoolCreate(g_nodeIp, g_nodePort, g_seed,
+                        g_qpool_LPname,
+                        g_qpool_create_number_of_token,
+                        g_qpool_amount_of_qwallet,
+                        g_qpool_weight_of_qwallet,
+                        g_qpool_amount_of_qu,
+                        g_qpool_index_of_token,
+                        g_qpool_amount_of_token,
+                        g_qpool_weight_of_token,
+                        g_qpool_swap_fee,
+                        g_offsetScheduledTick);
+        break;
+        case QPOOL_ISSUE_ASSET:
+            sanityCheckNode(g_nodeIp, g_nodePort);
+            sanityCheckSeed(g_seed);
+            sanityCheckNumberOfUnit(g_pool_numberOfShares);
+            sanityCheckValidString(g_pool_assetName);
+            sanityCheckValidString(g_pool_unitOfMeasurement);
+            sanityCheckNumberOfDecimal(g_pool_numberOfDecimalPlaces);
+            qpoolIssueAsset(g_nodeIp, g_nodePort, g_seed,
+                         g_pool_assetName,
+                         g_pool_unitOfMeasurement,
+                         g_pool_numberOfShares,
+                         g_pool_numberOfDecimalPlaces,
+                         g_offsetScheduledTick);
+            break;
+
+        case QPOOL_GET_INFOR:
+            sanityCheckNode(g_nodeIp, g_nodePort);
+            sanityCheckSeed(g_seed);
+            qpoolgetInfor(g_nodeIp, g_nodePort, g_seed,
+                         g_qpool_get_infor_number_of_pool,
+                         g_offsetScheduledTick);
+            break;
+        case QPOOL_ENABLE_TOKEN:
+            sanityCheckNode(g_nodeIp, g_nodePort);
+            sanityCheckSeed(g_seed);
+            qpoolenableToken(g_nodeIp, g_nodePort, g_seed,
+                         g_qpool_enable_asset_name,
+                         g_qpool_enable_asset_issur,
+                         g_offsetScheduledTick);
+            break;
+        case QPOOL_GET_NUMBER_OF_ENABLE_TOKEN:
+        sanityCheckNode(g_nodeIp, g_nodePort);
+        sanityCheckSeed(g_seed);
+        qpoolgetnumberofenableToken(g_nodeIp, g_nodePort, g_seed,
+                        g_offsetScheduledTick);
+        break;
+        case QPOOL_GET_ENABLE_TOKEN:
+        sanityCheckNode(g_nodeIp, g_nodePort);
+        sanityCheckSeed(g_seed);
+        qpoolgetenableToken(g_nodeIp, g_nodePort, g_seed,
+                        g_qool_tokenID_in_pool,
                         g_offsetScheduledTick);
         break;
         default:

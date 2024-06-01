@@ -700,6 +700,71 @@ void parseArgument(int argc, char** argv){
             CHECK_OVER_PARAMETERS
             break;
         }
+        if(strcmp(argv[i], "-qpoolcreate") == 0)
+        {
+            g_cmd = QPOOL_CREATE;
+            g_qpool_LPname = argv[i+1];
+            g_qpool_create_number_of_token = charToNumber(argv[i+2]);
+            if(g_qpool_create_number_of_token > 6 || g_qpool_create_number_of_token < 2) {
+                \
+                LOG("Overflow maximum number of token for a pool"); \
+                exit(1); \
+            }
+            g_qpool_amount_of_qwallet = charToNumber(argv[i+3]);
+            g_qpool_weight_of_qwallet = charToNumber(argv[i+4]);
+            g_qpool_amount_of_qu = charToNumber(argv[i+5]);
+
+            for(int j = 0 ; j < g_qpool_create_number_of_token - 2; j++) g_qpool_index_of_token[j] = charToNumber(argv[i+j+6]);
+            for(int j = 0 ; j < g_qpool_create_number_of_token - 2; j++) g_qpool_amount_of_token[j] = charToNumber(argv[i+j+(g_qpool_create_number_of_token-2)+6]);
+            for(int j = 0 ; j < g_qpool_create_number_of_token - 2; j++) g_qpool_weight_of_token[j] = charToNumber(argv[i+j+(g_qpool_create_number_of_token-2)*2+6]);
+            g_qpool_swap_fee = charToNumber(argv[i+(g_qpool_create_number_of_token - 2)*3+6]);
+            i+=(g_qpool_create_number_of_token - 2)*3+7;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolissueasset") == 0)
+        {
+            g_cmd = QPOOL_ISSUE_ASSET;
+            g_pool_assetName = argv[i+1];
+            g_pool_numberOfShares = charToNumber(argv[i+2]);
+            g_pool_unitOfMeasurement = argv[i+3];
+            g_pool_numberOfDecimalPlaces = charToNumber(argv[i+4]);
+            i+=5;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolgetinfor") == 0)
+        {
+            g_cmd = QPOOL_GET_INFOR;
+            g_qpool_get_infor_number_of_pool = charToNumber(argv[i + 1]);
+            i+=2;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolenabletoken") == 0)
+        {
+            g_cmd = QPOOL_ENABLE_TOKEN;
+            g_qpool_enable_asset_name = argv[i + 1];
+            g_qpool_enable_asset_issur = argv[i + 2];
+            i+=3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolgetenabletoken") == 0)
+        {
+            g_cmd = QPOOL_GET_ENABLE_TOKEN;
+            g_qool_tokenID_in_pool = charToNumber(argv[i + 1]);
+            i+=2;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolgetnumberofenabletoken") == 0)
+        {
+            g_cmd = QPOOL_GET_NUMBER_OF_ENABLE_TOKEN;
+            i+=1;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
         i++;
     }
     if (g_configFile != nullptr)
