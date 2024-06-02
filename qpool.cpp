@@ -19,7 +19,7 @@
 #define QPOOL_ISSUE_ASSET 2
 #define QPOOL_ENABLE_TOKEN 3
 #define FEE_CREATE_POOL 100000000LL
-#define TOKEN_TRANSER_FEE 1000000LL // Amount of qus
+#define TOKEN_TRANSER_FEE 1000LL // Amount of qus
 
 constexpr int QPOOL_CONTRACT_ID = 6;
 
@@ -62,8 +62,8 @@ struct CreateLiquidityPool_output {
 struct IssueAsset_input {
     uint64_t name;
     int64_t numberOfUnits;
-    char numberOfDecimalPlaces;
     uint64_t unitOfMeasurement;
+    char numberOfDecimalPlaces;
 };
 
 struct IssueAsset_output
@@ -116,6 +116,8 @@ struct PoolList_output {
     uint64_t liquidity2;
     uint64_t liquidity3;
     uint64_t liquidity4;
+    uint64_t totalAmountOfQPT;
+    uint64_t totalSupplyByQU;
 
     uint16_t IndexOfToken1;
     uint16_t IndexOfToken2;
@@ -129,9 +131,6 @@ struct PoolList_output {
     uint8_t Weight3;
     uint8_t Weight4;
     uint8_t WeightOfQWALLET;
-
-    uint64_t totalAmountOfQPT;
-    uint64_t totalSupplyByQU;
 };
 
 void QpoolCreate(const char* nodeIp, int nodePort,
