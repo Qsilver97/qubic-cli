@@ -19,7 +19,7 @@
 #define QPOOL_ISSUE_ASSET 2
 #define QPOOL_ENABLE_TOKEN 3
 #define FEE_CREATE_POOL 100000000LL
-#define TOKEN_TRANSER_FEE 1000000LL // Amount of qus
+#define TOKEN_TRANSER_FEE 1000LL // Amount of qus
 
 constexpr int QPOOL_CONTRACT_ID = 6;
 
