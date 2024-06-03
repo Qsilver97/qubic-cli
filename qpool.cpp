@@ -24,9 +24,9 @@
 constexpr int QPOOL_CONTRACT_ID = 6;
 
 enum qPoolFunctionId{
-    PoolList = 1,
-    GetTokenList = 2,
-    GetEnableToken = 3,
+    GetNumberOfEnableToken = 1,
+    PoolList = 4,
+    GetEnableToken = 5,
 };
 
 struct CreateLiquidityPool_input {
@@ -500,7 +500,7 @@ void qpoolgetnumberofenableToken(const char* nodeIp, int nodePort,
     packet.header.randomizeDejavu();
     packet.header.setType(RequestContractFunction::type());
     packet.rcf.inputSize = 0;
-    packet.rcf.inputType = qPoolFunctionId::GetTokenList;
+    packet.rcf.inputType = qPoolFunctionId::GetNumberOfEnableToken;
     packet.rcf.contractIndex = QPOOL_CONTRACT_ID;
     qc->sendData((uint8_t *) &packet, packet.header.size());
     std::vector<uint8_t> buffer;
