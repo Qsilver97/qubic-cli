@@ -106,7 +106,7 @@ Command:
 	-qairdroponetransferasset <ASSET_NAME> <ISSUER_IN_HEX> <NEW_OWNER_IDENTITY> <AMOUNT_OF_SHARE>
 		Transfer an asset via Airdrop contract.
 
-[QAIRDROP COMMAND]
+[QPOOL COMMAND]
 	-qpoolissueasset <ASSET_NAME> <NUMBER_OF_UNIT> <UNIT_OF_MEASUREMENT> <NUM_DECIMAL>
         Create an token via Qpool contract.
 	-qpoolenabletoken <Name_OF_TOKEN> <ISSUER_OF_TOKEN>
