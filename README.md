@@ -106,6 +106,21 @@ Command:
 	-qairdroponetransferasset <ASSET_NAME> <ISSUER_IN_HEX> <NEW_OWNER_IDENTITY> <AMOUNT_OF_SHARE>
 		Transfer an asset via Airdrop contract.
 
+[QAIRDROP COMMAND]
+	-qpoolissueasset <ASSET_NAME> <NUMBER_OF_UNIT> <UNIT_OF_MEASUREMENT> <NUM_DECIMAL>
+        Create an token via Qpool contract.
+	-qpoolenabletoken <Name_OF_TOKEN> <ISSUER_OF_TOKEN>
+		Enable a token in Qpool. Users can add the token to Qpool.
+	-qpoolgetnumberofenabletoken
+		Get the number of enable tokens in Qpool
+	-qpoolgetenabletoken <Enalble_Token_NUMBER>
+		Get the information of a enable token in Qpool
+	-qpoolcreate <NAME_OF_LPTOKEN> <NUMBER_OF_TOKEN> <AMOUNT_OF_QWALLETTOKEN> <WEIGHT_OF_QWALLETTOKEN> <AMOUNT_OF_QU> [<TOKEN1_ID> <TOKEN2_ID>, ... <TOKEN4_ID> (FROM NUMBER_OF_TOKEN)] [<TOKEN1_AMOUNT>, <TOKEN2_AMOUNT>, ... <TOKEN4_AMOUNT> (FROM NUMBER_OF_TOKEN)] [ <TOKEN1_WEIGHT>,<TOKEN2_WEIGHT>, ... <TOKEN4_WEIGHT>  (FROM NUMBER_OF_TOKEN)] <SWAP_FEE>
+		Create a new pool. NUMBER_OF_TOKEN including the Qwallet token and qu. the number of token id and token amount and token weight following the NUMBER_OF_TOKEN.
+	-qpoolgetinfor <POOL_NUMBER>
+		Get the information of a pool
+	
+
 [QTRY COMMAND]
 	-qtrygetfee
 		Show current qtry fee.
