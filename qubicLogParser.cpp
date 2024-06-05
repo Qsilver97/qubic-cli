@@ -145,7 +145,7 @@ void printQubicLog(uint8_t* logBuffer, int bufferSize){
         return;
     }
     FILE *fp;
-    if ( (fp= fopen("logfile","ab")) != 0 )
+    if ( (fp= fopen("logfile","ab")) == 0 )
         fp = fopen("logfile","wb");
     if ( fp != 0 )
     {
