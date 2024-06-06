@@ -765,6 +765,17 @@ void parseArgument(int argc, char** argv){
             CHECK_OVER_PARAMETERS
             break;
         }
+        if(strcmp(argv[i], "-qpoolswap") == 0)
+        {
+            g_cmd = QPOOL_SWAP;
+            g_qpool_swap_amount_of_token1 = charToNumber(argv[i + 1]);
+            g_qpool_swap_index_of_token1 = charToNumber(argv[i + 2]);
+            g_qpool_swap_index_of_token2 = charToNumber(argv[i + 3]);
+            g_qpool_swap_number_of_pool = charToNumber(argv[i + 4]);
+            i+=5;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
         i++;
     }
     if (g_configFile != nullptr)

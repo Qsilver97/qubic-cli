@@ -119,6 +119,8 @@ Command:
 		Create a new pool. NUMBER_OF_TOKEN including the Qwallet token and qu. the number of token id and token amount and token weight following the NUMBER_OF_TOKEN.
 	-qpoolgetinfor <POOL_NUMBER>
 		Get the information of a pool
+	-qpoolswap <AMOUNT_OF_TOKEN1> <INDEX_OF_TOKEN1> <INDEX_OF_TOKEN2> <NUMBER_OF_POOL>
+		Swap the <INDEX_OF_TOKEN1> to <INDEX_OF_TOKEN2> in <NUMBER_OF_POOL>
 	
 
 [QTRY COMMAND]

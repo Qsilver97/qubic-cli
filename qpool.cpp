@@ -18,6 +18,7 @@
 #define QPOOL_GET_LIST_OF_POOL_FN 1
 #define QPOOL_ISSUE_ASSET 2
 #define QPOOL_ENABLE_TOKEN 3
+#define QPOOL_SWAP 4
 #define FEE_CREATE_POOL 100000000LL
 #define TOKEN_TRANSER_FEE 1000LL // Amount of qus
 
@@ -27,6 +28,7 @@ enum qPoolFunctionId{
     GetNumberOfEnableToken = 1,
     GetEnableToken = 2,
     PoolList = 3,
+    GetValueOfToken = 4,
 };
 
 struct CreateLiquidityPool_input {
@@ -105,6 +107,19 @@ struct GetEnableToken_output
     uint8_t issuer[32];
 };
 
+struct Swap_input {
+    uint64_t AmountOfToken1;
+
+    uint16_t IndexOfToken1;
+    uint16_t IndexOfToken2;
+
+    uint8_t Poolnum;
+};
+
+struct Swap_output {
+    uint64_t AmountOfToken2;
+};
+
 struct PoolList_output {
     uint64_t NameOfLPToken;       // Name of LP token
     uint64_t swapFee;              // Swap fee in a Pool
@@ -130,6 +145,16 @@ struct PoolList_output {
     uint8_t Weight2;
     uint8_t Weight3;
     uint8_t Weight4;
+};
+
+
+struct GetValueOfToken_input {
+    uint16_t IndexOfToken;
+    uint8_t Poolnum;
+};
+
+struct GetValueOfToken_output {
+    uint64_t ValueOfToken;
 };
 
 void QpoolCreate(const char* nodeIp, int nodePort,
@@ -561,4 +586,124 @@ void qpoolgetenableToken(const char* nodeIp, int nodePort,
     }
     LOG("Name of enable token:  %llu\n", result.assetName);
     for(int i = 0 ; i < 32; i++) LOG("%u ", result.issuer[i]);
+}
+
+
+GetValueOfToken_output QpoolGetValueOfTokenByQu(const char* nodeIp, int nodePort,
+                    uint16_t indexOfToken,
+                    uint8_t Poolnum
+                    )
+{
+    auto qc = make_qc(nodeIp, nodePort);
+
+    struct {
+        RequestResponseHeader header;
+        RequestContractFunction rcf;
+        GetValueOfToken_input input;
+    } packet;
+
+    packet.header.setSize(sizeof(packet));
+    packet.header.randomizeDejavu();
+    packet.header.setType(RequestContractFunction::type());
+    packet.rcf.inputSize = sizeof(GetValueOfToken_input);
+    packet.rcf.inputType = qPoolFunctionId::GetValueOfToken;
+    packet.rcf.contractIndex = QPOOL_CONTRACT_ID;
+    packet.input.IndexOfToken = indexOfToken;
+    packet.input.Poolnum = Poolnum;
+    qc->sendData((uint8_t *) &packet, packet.header.size());
+    std::vector<uint8_t> buffer;
+    qc->receiveDataAll(buffer);
+    uint8_t* data = buffer.data();
+    int recvByte = buffer.size();
+    int ptr = 0;
+    GetValueOfToken_output result;
+    while (ptr < recvByte)
+    {
+        auto header = (RequestResponseHeader*)(data+ptr);
+        if (header->type() == RespondContractFunction::type()){
+            auto oup = (GetValueOfToken_output*)(data + ptr + sizeof(RequestResponseHeader));
+            result = *oup;
+        }
+        ptr+= header->size();
+    }
+
+    return result;
+}
+
+
+
+void qpoolswap(char* nodeIp, int nodePort,
+                    const char* seed,
+                    uint64_t Amountoftoken1,
+                    uint16_t indexOfToken1,
+                    uint16_t indexOfToken2,
+                    uint8_t NumberOfPool,
+                    uint32_t scheduledTickOffset)
+{
+    auto qc = make_qc(nodeIp, nodePort);
+    uint8_t privateKey[32] = {0};
+    uint8_t sourcePublicKey[32] = {0};
+    uint8_t destPublicKey[32] = {0};
+    uint8_t subSeed[32] = {0};
+    uint8_t digest[32] = {0};
+    uint8_t signature[64] = {0};
+    uint8_t TokenIssuerPublicKey[32] = {0};
+    char txHash[128] = {0};
+
+    getSubseedFromSeed((uint8_t*)seed, subSeed);
+    getPrivateKeyFromSubSeed(subSeed, privateKey);
+    getPublicKeyFromPrivateKey(privateKey, sourcePublicKey);
+    getPublicKeyFromIdentity(QPOOL_ADDRESS, destPublicKey);
+    ((uint64_t*)destPublicKey)[0] = QPOOL_CONTRACT_ID;
+    ((uint64_t*)destPublicKey)[1] = 0;
+    ((uint64_t*)destPublicKey)[2] = 0;
+    ((uint64_t*)destPublicKey)[3] = 0;
+    struct {
+        RequestResponseHeader header;
+        Transaction transaction;
+        Swap_input ia;
+        uint8_t sig[SIGNATURE_SIZE];
+    } packet;
+    memcpy(packet.transaction.sourcePublicKey, sourcePublicKey, 32);
+    memcpy(packet.transaction.destinationPublicKey, destPublicKey, 32);
+    GetValueOfToken_output Token1 = QpoolGetValueOfTokenByQu(nodeIp, nodePort, indexOfToken1, NumberOfPool);
+    packet.transaction.amount = Token1.ValueOfToken * Amountoftoken1 / 70;  //    Swap fee is 1% but should provide enough amount. it will be refunded the rest amount excluding 1% for swap fee
+    uint32_t scheduledTick = 0;
+    if (scheduledTickOffset < 50000){
+        uint32_t currentTick = getTickNumberFromNode(qc);
+        scheduledTick = currentTick + scheduledTickOffset;
+    } else {
+        scheduledTick = scheduledTickOffset;
+    }
+    packet.transaction.tick = scheduledTick;
+    packet.transaction.inputType = QPOOL_SWAP;
+    packet.transaction.inputSize = sizeof(Swap_input);
+
+    // fill the input
+    packet.ia.AmountOfToken1 = Amountoftoken1;
+    packet.ia.IndexOfToken1 = indexOfToken1;
+    packet.ia.IndexOfToken2 = indexOfToken2;
+    packet.ia.Poolnum = NumberOfPool;
+    // sign the packet
+    KangarooTwelve((unsigned char*)&packet.transaction,
+                   sizeof(Transaction) + sizeof(Swap_input),
+                   digest,
+                   32);
+    sign(subSeed, sourcePublicKey, digest, signature);
+    memcpy(packet.sig, signature, SIGNATURE_SIZE);
+    // set header
+    packet.header.setSize(sizeof(packet.header)+sizeof(Transaction)+sizeof(Swap_input)+ SIGNATURE_SIZE);
+    packet.header.zeroDejavu();
+    packet.header.setType(BROADCAST_TRANSACTION);
+
+    qc->sendData((uint8_t *) &packet, packet.header.size());
+    KangarooTwelve((unsigned char*)&packet.transaction,
+                   sizeof(Transaction)+sizeof(Swap_input)+ SIGNATURE_SIZE,
+                   digest,
+                   32); // recompute digest for txhash
+    getTxHashFromDigest(digest, txHash);
+    LOG("Transaction has been sent!\n");
+    printReceipt(packet.transaction, txHash, reinterpret_cast<const uint8_t *>(&packet.ia));
+    LOG("run ./qubic-cli [...] -checktxontick %u %s\n", scheduledTick, txHash);
+    LOG("to check your tx confirmation status\n");
 }
