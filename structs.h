@@ -526,6 +526,18 @@ struct SpecialCommandSendTime
     }
 };
 
+struct ComputorProposal
+{
+    unsigned char uriSize;
+    unsigned char uri[255];
+};
+struct ComputorBallot
+{
+    unsigned char zero;
+    unsigned char votes[(NUMBER_OF_COMPUTORS * 3 + 7) / 8];
+    unsigned char quasiRandomNumber;
+};
+
 #define SPECIAL_COMMAND_SET_PROPOSAL_AND_BALLOT_REQUEST 3ULL
 struct SpecialCommandSetProposalAndBallotRequest
 {
