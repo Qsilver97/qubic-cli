@@ -52,16 +52,17 @@ enum COMMAND
     QX_GET_ORDER=44,
     GET_MINING_SCORE_RANKING=45,
     SEND_COIN_IN_TICK = 46,
-    QAIRDROP_START_AIRDROP=47,
-    QARIDROP_TRANSFER_ASSET=48,
-    QARIDROP_ONE_TRANSFER_ASSET=49,
-    QPOOL_CREATE=50,
-    QPOOL_ISSUE_ASSET=51,
-    QPOOL_GET_INFOR=52,
-    QPOOL_ENABLE_TOKEN=53,
-    QPOOL_GET_ENABLE_TOKEN=54,
-    QPOOL_GET_NUMBER_OF_ENABLE_TOKEN=55,
-    QPOOL_SWAP=56
+    QAIRDROP_START_AIRDROP=100,
+    QARIDROP_TRANSFER_ASSET=101,
+    QARIDROP_ONE_TRANSFER_ASSET=102,
+    QPOOL_CREATE=103,
+    QPOOL_ISSUE_ASSET=104,
+    QPOOL_GET_INFOR=105,
+    QPOOL_ENABLE_TOKEN=106,
+    QPOOL_GET_ENABLE_TOKEN=107,
+    QPOOL_GET_NUMBER_OF_ENABLE_TOKEN=108,
+    MAKE_PROPOSAL=109,
+    QPOOL_SWAP=110
 };
 
 struct RequestResponseHeader {
@@ -525,6 +526,37 @@ struct SpecialCommandSendTime
     {
         return 255;
     }
+};
+
+struct ComputorProposal
+{
+    unsigned char uriSize;
+    unsigned char uri[255];
+};
+struct ComputorBallot
+{
+    unsigned char zero;
+    unsigned char votes[(NUMBER_OF_COMPUTORS * 3 + 7) / 8];
+    unsigned char quasiRandomNumber;
+};
+
+#define SPECIAL_COMMAND_SET_PROPOSAL_AND_BALLOT_REQUEST 3ULL
+struct SpecialCommandSetProposalAndBallotRequest
+{
+    unsigned long long everIncreasingNonceAndCommandType;
+    unsigned short computorIndex;
+    unsigned char padding[6];
+    ComputorProposal proposal;
+    ComputorBallot ballot;
+    unsigned char signature[SIGNATURE_SIZE];
+};
+
+#define SPECIAL_COMMAND_SET_PROPOSAL_AND_BALLOT_RESPONSE 4ULL
+struct SpecialCommandSetProposalAndBallotResponse
+{
+    unsigned long long everIncreasingNonceAndCommandType;
+    unsigned short computorIndex;
+    unsigned char padding[6];
 };
 
 #pragma pack(push, 1)

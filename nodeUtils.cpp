@@ -827,6 +827,55 @@ void toogleMainAux(const char* nodeIp, const int nodePort, const char* seed,
     }
 }
 
+void makeproposal(const char* nodeIp, const int nodePort, const char* seed,int32_t computorIndex,const char *URI)
+{
+    uint8_t privateKey[32] = {0};
+    uint8_t sourcePublicKey[32] = {0};
+    uint8_t subseed[32] = {0};
+    uint8_t digest[32] = {0};
+    uint8_t signature[64] = {0};
+printf("makeproposal from computor.%d (%s)\n",computorIndex,URI);
+    struct {
+        RequestResponseHeader header;
+        SpecialCommandSetProposalAndBallotRequest cmd;
+        uint8_t signature[64];
+    } packet;
+    memset(&packet,0,sizeof(packet));
+    packet.header.setSize(sizeof(packet));
+    packet.header.randomizeDejavu();
+    packet.header.setType(PROCESS_SPECIAL_COMMAND);
+    uint64_t curTime = time(NULL);
+    uint64_t commandByte = (uint64_t)(SPECIAL_COMMAND_SET_PROPOSAL_AND_BALLOT_REQUEST) << 56;
+    packet.cmd.everIncreasingNonceAndCommandType = commandByte | curTime;
+    packet.cmd.computorIndex = computorIndex;
+    packet.cmd.proposal.uriSize = (uint8_t)strlen(URI);
+    strncpy((char *)packet.cmd.proposal.uri,URI,packet.cmd.proposal.uriSize);
+    int offset = computorIndex * 3;
+    packet.cmd.ballot.votes[offset >> 3] = (1 << (offset & 7));
+    getSubseedFromSeed((uint8_t*)seed, subseed);
+    getPrivateKeyFromSubSeed(subseed, privateKey);
+    getPublicKeyFromPrivateKey(privateKey, sourcePublicKey);
+    KangarooTwelve((unsigned char*)&packet.cmd,
+                   sizeof(packet.cmd),
+                   digest,
+                   32);
+    sign(subseed, sourcePublicKey, digest, signature);
+    memcpy(packet.signature, signature, 64);
+    auto qc = make_qc(nodeIp, nodePort);
+    qc->sendData((uint8_t *) &packet, packet.header.size());
+   /* auto response = qc->receivePacketAs<SpecialCommandSetProposalAndBallotResponse>();
+
+    if (response.everIncreasingNonceAndCommandType == packet.cmd.everIncreasingNonceAndCommandType){
+        if (response.computorIndex == packet.cmd.computorIndex){
+            LOG("Successfully set proposal set\n");
+        } else {
+            LOG("The packet is successfully sent but failed set proposal\n");
+        }
+    } else{
+        LOG("Failed makeproposal\n");
+    }*/
+}
+
 void setSolutionThreshold(const char* nodeIp, const int nodePort, const char* seed,
                           int command, int epoch, int threshold)
 {

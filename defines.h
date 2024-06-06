@@ -1,12 +1,12 @@
 #include "commonFunctions.h"
 #define DEFAULT_SCHEDULED_TICK_OFFSET 20
 #define DEFAULT_NODE_PORT 21841
-#define DEFAULT_NODE_IP "127.0.0.1"
+#define DEFAULT_NODE_IP ((char *)"127.0.0.1")
 #define NUMBER_OF_TRANSACTIONS_PER_TICK 1024
 #define SIGNATURE_SIZE 64
 #define SPECTRUM_DEPTH 24 // Is derived from SPECTRUM_CAPACITY (=N)
 #define ASSETS_DEPTH 24 // Is derived from ASSETS_CAPACITY (=N)
-#define DEFAULT_SEED "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+#define DEFAULT_SEED ((char *)"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 #define ARBITRATOR "AFZPUAIYVPNUYGJRQVLUKOPPVLHAZQTGLYAAUUNBXFTVTAMSBKQBLEIEPCVJ"
 #define NUMBER_OF_COMPUTORS 676
 #define EXCHANGE_PUBLIC_PEERS 0

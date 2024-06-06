@@ -483,6 +483,17 @@ void parseArgument(int argc, char** argv){
             CHECK_OVER_PARAMETERS
             break;
         }
+        if(strcmp(argv[i], "-makeproposal") == 0)
+        {
+            g_cmd = MAKE_PROPOSAL;
+            g_requestedSpecialCommand = SPECIAL_COMMAND_SET_PROPOSAL_AND_BALLOT_REQUEST;
+            g_proposal_computor = charToNumber(argv[i + 1]);
+            g_proposal_uri = argv[i + 2];
+            i+=3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+
         if (strcmp(argv[i], "-synctime") == 0)
         {
             g_cmd = SYNC_TIME;

@@ -11,6 +11,8 @@ char* g_requestedIdentity  = nullptr;
 char* g_qx_share_transfer_possessed_identity = nullptr;
 char* g_qx_share_transfer_new_owner_identity = nullptr;
 int64_t g_qx_share_transfer_amount = 0;
+int16_t g_proposal_computor;
+char *g_proposal_uri;
 
 int64_t g_TxAmount = 0;
 uint16_t g_TxType = 0;
