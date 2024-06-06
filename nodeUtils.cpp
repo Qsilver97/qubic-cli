@@ -849,7 +849,7 @@ void makeproposal(const char* nodeIp, const int nodePort, const char* seed,const
     packet.cmd.everIncreasingNonceAndCommandType = commandByte | curTime;
     packet.cmd.computorIndex = computorIndex;
     packet.cmd.proposal.uriSize = (uint8_t)strlen(URI);
-    strncpy(packet.cmd.proposal.uri,URI,packet.cmd.proposal.uriSize);
+    strncpy((char *)packet.cmd.proposal.uri,URI,packet.cmd.proposal.uriSize);
     int offset = computorIndex * 3;
     packet.cmd.ballot.votes[offset >> 3] = (1 << (offset & 7));
     getSubseedFromSeed((uint8_t*)seed, subseed);
