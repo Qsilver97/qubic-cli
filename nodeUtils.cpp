@@ -863,7 +863,7 @@ void makeproposal(const char* nodeIp, const int nodePort, const char* seed,const
     memcpy(packet.signature, signature, 64);
     auto qc = make_qc(nodeIp, nodePort);
     qc->sendData((uint8_t *) &packet, packet.header.size());
-    auto response = qc->receivePacketAs<SpecialCommandSetProposalAndBallotResponse>();
+   /* auto response = qc->receivePacketAs<SpecialCommandSetProposalAndBallotResponse>();
 
     if (response.everIncreasingNonceAndCommandType == packet.cmd.everIncreasingNonceAndCommandType){
         if (response.computorIndex == packet.cmd.computorIndex){
@@ -873,7 +873,7 @@ void makeproposal(const char* nodeIp, const int nodePort, const char* seed,const
         }
     } else{
         LOG("Failed makeproposal\n");
-    }
+    }*/
 }
 
 void setSolutionThreshold(const char* nodeIp, const int nodePort, const char* seed,
