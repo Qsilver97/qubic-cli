@@ -176,7 +176,7 @@ void QpoolCreate(const char* nodeIp, int nodePort,
     memcpy(packet.transaction.sourcePublicKey, sourcePublicKey, 32);
     memcpy(packet.transaction.destinationPublicKey, destPublicKey, 32);
     packet.transaction.amount = amountOfQu + TOKEN_TRANSER_FEE * (number_of_token - 1) + FEE_CREATE_POOL;
-    printf("4 %u\n", packet.transaction.amount);
+    printf("4 %lu\n", packet.transaction.amount);
     uint32_t scheduledTick = 0;
     if (offsetScheduledTick < 50000){
         uint32_t currentTick = getTickNumberFromNode(qc);
@@ -219,11 +219,11 @@ void QpoolCreate(const char* nodeIp, int nodePort,
         packet.ia.Weight4 = weight_of_token[3];
     }
     packet.ia.swapFee = swap_fee;
-    printf("%u\n", packet.ia.swapFee);
-    printf("%u %u %u\n", packet.ia.initialAmount1, packet.ia.IndexOfToken1, packet.ia.Weight1);
-    printf("%u %u %u\n", packet.ia.initialAmount2, packet.ia.IndexOfToken2, packet.ia.Weight2);
-    printf("%u %u %u\n", packet.ia.initialAmount3, packet.ia.IndexOfToken3, packet.ia.Weight3);
-    printf("%u %u %u\n", packet.ia.initialAmount4, packet.ia.IndexOfToken4, packet.ia.Weight4);
+    printf("%lu\n", packet.ia.swapFee);
+    printf("%lu %u %u\n", packet.ia.initialAmount1, packet.ia.IndexOfToken1, packet.ia.Weight1);
+    printf("%lu %u %u\n", packet.ia.initialAmount2, packet.ia.IndexOfToken2, packet.ia.Weight2);
+    printf("%lu %u %u\n", packet.ia.initialAmount3, packet.ia.IndexOfToken3, packet.ia.Weight3);
+    printf("%lu %u %u\n", packet.ia.initialAmount4, packet.ia.IndexOfToken4, packet.ia.Weight4);
     
     // sign the packet
     KangarooTwelve((unsigned char*)&packet.transaction,
