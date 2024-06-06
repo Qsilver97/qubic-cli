@@ -176,7 +176,7 @@ void QpoolCreate(const char* nodeIp, int nodePort,
     memcpy(packet.transaction.sourcePublicKey, sourcePublicKey, 32);
     memcpy(packet.transaction.destinationPublicKey, destPublicKey, 32);
     packet.transaction.amount = amountOfQu + TOKEN_TRANSER_FEE * (number_of_token - 1) + FEE_CREATE_POOL;
-    printf("4 %lu\n", packet.transaction.amount);
+    printf("4 %llu\n", packet.transaction.amount);
     uint32_t scheduledTick = 0;
     if (offsetScheduledTick < 50000){
         uint32_t currentTick = getTickNumberFromNode(qc);
