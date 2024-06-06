@@ -21,12 +21,12 @@
 #define FEE_CREATE_POOL 100000000LL
 #define TOKEN_TRANSER_FEE 1000LL // Amount of qus
 
-constexpr int QPOOL_CONTRACT_ID = 6;
+constexpr int QPOOL_CONTRACT_ID = 7;
 
 enum qPoolFunctionId{
     GetNumberOfEnableToken = 1,
-    PoolList = 4,
-    GetEnableToken = 5,
+    GetEnableToken = 2,
+    PoolList = 3,
 };
 
 struct CreateLiquidityPool_input {
@@ -47,12 +47,11 @@ struct CreateLiquidityPool_input {
 
     uint8_t NumberOfToken;        // Number(maximum 5) of token in a pool
 
+    uint8_t WeightOfQWALLET;
     uint8_t Weight1;
     uint8_t Weight2;
     uint8_t Weight3;
     uint8_t Weight4;
-
-    uint8_t WeightOfQWALLET;
 };
 
 struct CreateLiquidityPool_output {
@@ -126,11 +125,11 @@ struct PoolList_output {
 
     uint8_t NumberOfToken;        // Number(maximum 5) of token in a pool
 
+    uint8_t WeightOfQWALLET;
     uint8_t Weight1;
     uint8_t Weight2;
     uint8_t Weight3;
     uint8_t Weight4;
-    uint8_t WeightOfQWALLET;
 };
 
 void QpoolCreate(const char* nodeIp, int nodePort,
@@ -327,7 +326,7 @@ void qpoolIssueAsset(const char* nodeIp, int nodePort,
     LOG("to check your tx confirmation status\n");
 }
 
-void getpool(QCPtr qc, uint64_t numberOfPool, PoolList_output& result)
+void getpool(QCPtr qc, uint32_t numberOfPool, PoolList_output& result)
 {
     struct {
         RequestResponseHeader header;
@@ -360,7 +359,7 @@ void getpool(QCPtr qc, uint64_t numberOfPool, PoolList_output& result)
 
 void qpoolgetInfor(const char* nodeIp, int nodePort,
                   const char* seed,
-                  uint64_t number_of_pool,
+                  uint32_t number_of_pool,
                   uint32_t scheduledTickOffset
 ) {
     auto qc = make_qc(nodeIp, nodePort);
@@ -368,41 +367,41 @@ void qpoolgetInfor(const char* nodeIp, int nodePort,
     memset(&pool, 0, sizeof(PoolList_output));
     getpool(qc, number_of_pool, pool);
 
-    LOG("number of token: %u\n", pool.NameOfLPToken);
+    LOG("number of token: %llu\n", pool.NameOfLPToken);
     LOG("number of token: %u\n", pool.NumberOfToken);
     char issueroftoken[128] = {0};
 
-    LOG("liquidity of QWALLET: %u\n",  pool.liquidityOfQWALLET);
+    LOG("liquidity of QWALLET: %llu\n",  pool.liquidityOfQWALLET);
     LOG("Weight of QWALLET: %u\n",  pool.WeightOfQWALLET);
-    LOG("liquidity of QU: %u\n",  pool.liquidityOfQU);
+    LOG("liquidity of QU: %llu\n",  pool.liquidityOfQU);
 
     if(pool.NumberOfToken > 2) {
         LOG("Address of token1: %u ", pool.IndexOfToken1);
         LOG("Weight of token1: %u ", pool.Weight1);
-        LOG("liquidity of token1: %u\n",  pool.liquidity1);
+        LOG("liquidity of token1: %llu\n",  pool.liquidity1);
     }
 
     if(pool.NumberOfToken > 3) {
         LOG("Address of token2: %u ", pool.IndexOfToken2);
         LOG("Weight of token2: %u ", pool.Weight2);
-        LOG("liquidity of token2: %u\n",  pool.liquidity2);
+        LOG("liquidity of token2: %llu\n",  pool.liquidity2);
     }
 
     if(pool.NumberOfToken > 4) {
         LOG("Address of token3: %u ", pool.IndexOfToken3);
         LOG("Weight of token3: %u ", pool.Weight3);
-        LOG("liquidity of token3: %u\n",  pool.liquidity3);
+        LOG("liquidity of token3: %llu\n",  pool.liquidity3);
     }
 
     if(pool.NumberOfToken > 5) {    
         LOG("Address of token4: %u ", pool.IndexOfToken4);
         LOG("Weight of token4: %u ", pool.Weight4);
-        LOG("liquidity of token4: %u\n",  pool.liquidity4);
+        LOG("liquidity of token4: %llu\n",  pool.liquidity4);
     }
 
-    LOG("Swap fee in pool%u: %u\n",number_of_pool+1, pool.swapFee);
-    LOG("Total Amount Of QPT in pool%u: %u\n", number_of_pool+1 ,pool.totalAmountOfQPT);
-    LOG("Total value of tokens in pool%u: %u\n", number_of_pool+1, pool.totalSupplyByQU);
+    LOG("Swap fee in pool%u: %llu\n",number_of_pool+1, pool.swapFee);
+    LOG("Total Amount Of QPT in pool%u: %llu\n", number_of_pool+1 ,pool.totalAmountOfQPT);
+    LOG("Total value of tokens in pool%u: %llu\n", number_of_pool+1, pool.totalSupplyByQU);
 }
 
 void qpoolenableToken(const char* nodeIp, int nodePort,
@@ -560,6 +559,6 @@ void qpoolgetenableToken(const char* nodeIp, int nodePort,
         }
         ptr+= header->size();
     }
-    LOG("Name of enable token:  %u\n", result.assetName);
+    LOG("Name of enable token:  %llu\n", result.assetName);
     for(int i = 0 ; i < 32; i++) LOG("%u ", result.issuer[i]);
 }

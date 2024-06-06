@@ -24,7 +24,7 @@ void qpoolIssueAsset(const char* nodeIp, int nodePort,
 
 void qpoolgetInfor(const char* nodeIp, int nodePort,
                   const char* seed,
-                  uint64_t number_of_pool,
+                  uint32_t number_of_pool,
                   uint32_t scheduledTickOffset
 );
 
