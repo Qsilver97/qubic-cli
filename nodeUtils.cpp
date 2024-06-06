@@ -827,14 +827,14 @@ void toogleMainAux(const char* nodeIp, const int nodePort, const char* seed,
     }
 }
 
-void makeproposal(const char* nodeIp, const int nodePort, const char* seed,const char *URI,int32_t computorIndex)
+void makeproposal(const char* nodeIp, const int nodePort, const char* seed,int32_t computorIndex,const char *URI)
 {
     uint8_t privateKey[32] = {0};
     uint8_t sourcePublicKey[32] = {0};
     uint8_t subseed[32] = {0};
     uint8_t digest[32] = {0};
     uint8_t signature[64] = {0};
-
+printf("makeproposal from computor.%d (%s)\n",computorIndex,URI);
     struct {
         RequestResponseHeader header;
         SpecialCommandSetProposalAndBallotRequest cmd;
