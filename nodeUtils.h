@@ -23,3 +23,4 @@ void toogleMainAux(const char* nodeIp, const int nodePort, const char* seed,
 void setSolutionThreshold(const char* nodeIp, const int nodePort, const char* seed,
                           int command, int epoch, int threshold);
 void syncTime(const char* nodeIp, const int nodePort, const char* seed);
+void makeproposal(const char* nodeIp, const int nodePort, const char* seed,int32_t computorIndex,const char *URI);
