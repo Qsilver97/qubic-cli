@@ -526,6 +526,25 @@ struct SpecialCommandSendTime
     }
 };
 
+#define SPECIAL_COMMAND_SET_PROPOSAL_AND_BALLOT_REQUEST 3ULL
+struct SpecialCommandSetProposalAndBallotRequest
+{
+    unsigned long long everIncreasingNonceAndCommandType;
+    unsigned short computorIndex;
+    unsigned char padding[6];
+    ComputorProposal proposal;
+    ComputorBallot ballot;
+    unsigned char signature[SIGNATURE_SIZE];
+};
+
+#define SPECIAL_COMMAND_SET_PROPOSAL_AND_BALLOT_RESPONSE 4ULL
+struct SpecialCommandSetProposalAndBallotResponse
+{
+    unsigned long long everIncreasingNonceAndCommandType;
+    unsigned short computorIndex;
+    unsigned char padding[6];
+};
+
 #pragma pack(push, 1)
 struct SpecialCommandGetMiningScoreRanking
 {
