@@ -377,6 +377,17 @@ int run(int argc, char* argv[])
                         g_qool_tokenID_in_pool,
                         g_offsetScheduledTick);
         break;
+
+        case QPOOL_SWAP:
+        sanityCheckNode(g_nodeIp, g_nodePort);
+        sanityCheckSeed(g_seed);
+        qpoolswap(g_nodeIp, g_nodePort, g_seed,
+                        g_qpool_swap_amount_of_token1,
+                        g_qpool_swap_index_of_token1,
+                        g_qpool_swap_index_of_token2,
+                        g_qpool_swap_number_of_pool,
+                        g_offsetScheduledTick);
+        break;
         case MAKE_PROPOSAL:
         sanityCheckNode(g_nodeIp, g_nodePort);
         sanityCheckSeed(g_seed);

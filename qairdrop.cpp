@@ -17,7 +17,7 @@
 #define QAIRDROP_TRANSFER_SHARE_FN 2
 #define QAIRDROP_ONE_TRANSFER_SHARE_FN 3
 
-constexpr int QAIRDROP_CONTRACT_ID = 5;
+constexpr int QAIRDROP_CONTRACT_ID = 6;
 enum qAirdropFunctionId{
     Fees = 1,
 };

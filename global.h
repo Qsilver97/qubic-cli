@@ -101,6 +101,11 @@ char* g_pool_unitOfMeasurement = nullptr;
 int64_t g_pool_numberOfShares = -1;
 char g_pool_numberOfDecimalPlaces = 0;
 
-int64_t g_qpool_get_infor_number_of_pool = 0;
+uint64_t g_qpool_swap_amount_of_token1;
+uint16_t g_qpool_swap_index_of_token1;
+uint16_t g_qpool_swap_index_of_token2;
+uint8_t g_qpool_swap_number_of_pool;
+
+int32_t g_qpool_get_infor_number_of_pool = 0;
 
 uint64_t g_get_log_passcode[4] = {0};

@@ -24,7 +24,7 @@ void qpoolIssueAsset(const char* nodeIp, int nodePort,
 
 void qpoolgetInfor(const char* nodeIp, int nodePort,
                   const char* seed,
-                  uint64_t number_of_pool,
+                  uint32_t number_of_pool,
                   uint32_t scheduledTickOffset
 );
 
@@ -43,3 +43,11 @@ void qpoolgetenableToken(const char* nodeIp, int nodePort,
                     uint32_t tokenID,
                     uint32_t scheduledTickOffset);
                     
+
+void qpoolswap(char* nodeIp, int nodePort,
+                    const char* seed,
+                    uint64_t Amountoftoken1,
+                    uint16_t indexOfToken1,
+                    uint16_t indexOfToken2,
+                    uint8_t NumberOfPool,
+                    uint32_t scheduledTickOffset);
