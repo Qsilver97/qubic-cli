@@ -49,5 +49,44 @@ void qpoolswap(char* nodeIp, int nodePort,
                     uint64_t Amountoftoken1,
                     uint16_t indexOfToken1,
                     uint16_t indexOfToken2,
-                    uint8_t NumberOfPool,
+                    uint16_t NumberOfPool,
+                    uint32_t scheduledTickOffset);
+
+void qpoolbignumberTostring(char* nodeIp, int nodePort,
+                    const char* seed,
+                    int64_t number,
+                    uint32_t scheduledTickOffset);
+
+void qpoolbignumbergetstatus(char* nodeIp, int nodePort,
+                    const char* seed,
+                    uint32_t scheduledTickOffset);
+
+void qpoolbigstringTonumber(char* nodeIp, int nodePort,
+                    const char* seed,
+                    uint8_t lengthOfNumber,
+                    uint8_t* stringnumber,
+                    uint32_t scheduledTickOffset);
+
+void qpoolbigplus(char* nodeIp, int nodePort,
+                    const char* seed,
+                    uint8_t alen,
+                    uint8_t* a,
+                    uint8_t blen,
+                    uint8_t* b,
+                    uint32_t scheduledTickOffset);
+
+void qpoolbigminus(char* nodeIp, int nodePort,
+                    const char* seed,
+                    uint8_t alen,
+                    uint8_t* a,
+                    uint8_t blen,
+                    uint8_t* b,
+                    uint32_t scheduledTickOffset);
+
+void qpoolbigmulti(char* nodeIp, int nodePort,
+                    const char* seed,
+                    uint8_t alen,
+                    uint8_t* a,
+                    uint8_t blen,
+                    uint8_t* b,
                     uint32_t scheduledTickOffset);

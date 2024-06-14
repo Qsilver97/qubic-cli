@@ -19,6 +19,11 @@
 #define QPOOL_ISSUE_ASSET 2
 #define QPOOL_ENABLE_TOKEN 3
 #define QPOOL_SWAP 4
+#define QPOOL_BIGNUMBERTO_STRING 10
+#define QPOOL_BIGSTRINGTO_NUMBER 11
+#define QPOOL_BIGPLUS 12
+#define QPOOL_BIGMINUS 13
+#define QPOOL_BIGMULTI 14
 #define FEE_CREATE_POOL 100000000LL
 #define TOKEN_TRANSER_FEE 1000LL // Amount of qus
 
@@ -113,7 +118,7 @@ struct Swap_input {
     uint16_t IndexOfToken1;
     uint16_t IndexOfToken2;
 
-    uint8_t Poolnum;
+    uint16_t Poolnum;
 };
 
 struct Swap_output {
@@ -150,11 +155,76 @@ struct PoolList_output {
 
 struct GetValueOfToken_input {
     uint16_t IndexOfToken;
-    uint8_t Poolnum;
+    uint16_t Poolnum;
 };
 
 struct GetValueOfToken_output {
     uint64_t ValueOfToken;
+};
+
+struct BIGNumberToString_input {
+    int64_t a;
+};
+
+struct BIGNumberToString_output {
+    uint8_t len;
+    uint8_t result[128];
+};
+
+struct GetBIGStatus_input {
+
+};
+
+struct GetBIGStatus_output {
+    int64_t BIGTest;
+    uint8_t BIGStringNumberLen;
+    uint8_t BIGStringNumber[128];
+    bool BIGTestComparisonResult;
+};
+
+struct BIGStringToNumber_input {
+    uint8_t len;
+    uint8_t a[128];
+};
+
+struct BIGStringToNumber_output {
+    int64_t result;
+};
+
+struct BIGPlus_input {
+    uint8_t alen;
+    uint8_t blen;
+    uint8_t a[128];
+    uint8_t b[128];
+};
+
+struct BIGPlus_output {
+    uint8_t resultlen;
+    uint8_t result[128];
+};
+
+struct BIGMinus_input {
+    uint8_t alen;
+    uint8_t blen;
+    uint8_t a[128];
+    uint8_t b[128];
+};
+
+struct BIGMinus_output {
+    uint8_t resultlen;
+    uint8_t result[128];
+};
+
+struct BIGMultiple_input {
+    uint8_t alen;
+    uint8_t blen;
+    uint8_t a[128];
+    uint8_t b[128];
+};
+
+struct BIGMultiple_output {
+    uint8_t resultlen;
+    uint8_t result[128];
 };
 
 void QpoolCreate(const char* nodeIp, int nodePort,
@@ -590,7 +660,7 @@ void qpoolgetenableToken(const char* nodeIp, int nodePort,
 
 GetValueOfToken_output QpoolGetValueOfTokenByQu(const char* nodeIp, int nodePort,
                     uint16_t indexOfToken,
-                    uint8_t Poolnum
+                    uint16_t Poolnum
                     )
 {
     auto qc = make_qc(nodeIp, nodePort);
@@ -636,7 +706,7 @@ void qpoolswap(char* nodeIp, int nodePort,
                     uint64_t Amountoftoken1,
                     uint16_t indexOfToken1,
                     uint16_t indexOfToken2,
-                    uint8_t NumberOfPool,
+                    uint16_t NumberOfPool,
                     uint32_t scheduledTickOffset)
 {
     auto qc = make_qc(nodeIp, nodePort);
@@ -698,6 +768,435 @@ void qpoolswap(char* nodeIp, int nodePort,
     qc->sendData((uint8_t *) &packet, packet.header.size());
     KangarooTwelve((unsigned char*)&packet.transaction,
                    sizeof(Transaction)+sizeof(Swap_input)+ SIGNATURE_SIZE,
+                   digest,
+                   32); // recompute digest for txhash
+    getTxHashFromDigest(digest, txHash);
+    LOG("Transaction has been sent!\n");
+    printReceipt(packet.transaction, txHash, reinterpret_cast<const uint8_t *>(&packet.ia));
+    LOG("run ./qubic-cli [...] -checktxontick %u %s\n", scheduledTick, txHash);
+    LOG("to check your tx confirmation status\n");
+}
+
+
+void qpoolbignumberTostring(char* nodeIp, int nodePort,
+                    const char* seed,
+                    int64_t number,
+                    uint32_t scheduledTickOffset)
+{
+    auto qc = make_qc(nodeIp, nodePort);
+    uint8_t privateKey[32] = {0};
+    uint8_t sourcePublicKey[32] = {0};
+    uint8_t destPublicKey[32] = {0};
+    uint8_t subSeed[32] = {0};
+    uint8_t digest[32] = {0};
+    uint8_t signature[64] = {0};
+    uint8_t TokenIssuerPublicKey[32] = {0};
+    char txHash[128] = {0};
+
+    getSubseedFromSeed((uint8_t*)seed, subSeed);
+    getPrivateKeyFromSubSeed(subSeed, privateKey);
+    getPublicKeyFromPrivateKey(privateKey, sourcePublicKey);
+    getPublicKeyFromIdentity(QPOOL_ADDRESS, destPublicKey);
+    ((uint64_t*)destPublicKey)[0] = QPOOL_CONTRACT_ID;
+    ((uint64_t*)destPublicKey)[1] = 0;
+    ((uint64_t*)destPublicKey)[2] = 0;
+    ((uint64_t*)destPublicKey)[3] = 0;
+    struct {
+        RequestResponseHeader header;
+        Transaction transaction;
+        BIGNumberToString_input ia;
+        uint8_t sig[SIGNATURE_SIZE];
+    } packet;
+    memcpy(packet.transaction.sourcePublicKey, sourcePublicKey, 32);
+    memcpy(packet.transaction.destinationPublicKey, destPublicKey, 32);
+    packet.transaction.amount = 30;  //    Swap fee is 1% but should provide enough amount. it will be refunded the rest amount excluding 1% for swap fee
+    uint32_t scheduledTick = 0;
+    if (scheduledTickOffset < 50000){
+        uint32_t currentTick = getTickNumberFromNode(qc);
+        scheduledTick = currentTick + scheduledTickOffset;
+    } else {
+        scheduledTick = scheduledTickOffset;
+    }
+    packet.transaction.tick = scheduledTick;
+    packet.transaction.inputType = QPOOL_BIGNUMBERTO_STRING;
+    packet.transaction.inputSize = sizeof(BIGNumberToString_input);
+
+    // fill the input
+    packet.ia.a = number;
+    // sign the packet
+    KangarooTwelve((unsigned char*)&packet.transaction,
+                   sizeof(Transaction) + sizeof(BIGNumberToString_input),
+                   digest,
+                   32);
+    sign(subSeed, sourcePublicKey, digest, signature);
+    memcpy(packet.sig, signature, SIGNATURE_SIZE);
+    // set header
+    packet.header.setSize(sizeof(packet.header)+sizeof(Transaction)+sizeof(BIGNumberToString_input)+ SIGNATURE_SIZE);
+    packet.header.zeroDejavu();
+    packet.header.setType(BROADCAST_TRANSACTION);
+
+    qc->sendData((uint8_t *) &packet, packet.header.size());
+    KangarooTwelve((unsigned char*)&packet.transaction,
+                   sizeof(Transaction)+sizeof(BIGNumberToString_input)+ SIGNATURE_SIZE,
+                   digest,
+                   32); // recompute digest for txhash
+    getTxHashFromDigest(digest, txHash);
+    LOG("Transaction has been sent!\n");
+    printReceipt(packet.transaction, txHash, reinterpret_cast<const uint8_t *>(&packet.ia));
+    LOG("run ./qubic-cli [...] -checktxontick %u %s\n", scheduledTick, txHash);
+    LOG("to check your tx confirmation status\n");
+}
+
+void qpoolbignumbergetstatus(char* nodeIp, int nodePort,
+                  const char* seed,
+                  uint32_t scheduledTickOffset
+) {
+    auto qc = make_qc(nodeIp, nodePort);
+
+    struct {
+        RequestResponseHeader header;
+        RequestContractFunction rcf;
+    } packet;
+
+    packet.header.setSize(sizeof(packet));
+    packet.header.randomizeDejavu();
+    packet.header.setType(RequestContractFunction::type());
+    packet.rcf.inputSize = 0;
+    packet.rcf.inputType = 5;
+    packet.rcf.contractIndex = QPOOL_CONTRACT_ID;
+    qc->sendData((uint8_t *) &packet, packet.header.size());
+    std::vector<uint8_t> buffer;
+    qc->receiveDataAll(buffer);
+    uint8_t* data = buffer.data();
+    int recvByte = buffer.size();
+    int ptr = 0;
+    GetBIGStatus_output result;
+    while (ptr < recvByte)
+    {
+        auto header = (RequestResponseHeader*)(data+ptr);
+        if (header->type() == RespondContractFunction::type()){
+            auto oup = (GetBIGStatus_output*)(data + ptr + sizeof(RequestResponseHeader));
+            result = *oup;
+        }
+        ptr+= header->size();
+    }
+    
+    printf("BIGNumber: %lld\n length of string number: %u\n", result.BIGTest, result.BIGStringNumberLen);
+    if(result.BIGStringNumber[0] == 45) printf("- ");
+    for(uint8_t i = 0 ; i < result.BIGStringNumberLen; i++) {
+        if(i == 0 && result.BIGStringNumber[0] == '-') continue;
+        printf("%u ", result.BIGStringNumber[i] - '0');
+    }
+    printf("\nstatus of comparison: %d", result.BIGTestComparisonResult);
+}
+
+
+void qpoolbigstringTonumber(char* nodeIp, int nodePort,
+                    const char* seed,
+                    uint8_t lengthOfNumber,
+                    uint8_t* stringnumber,
+                    uint32_t scheduledTickOffset)
+{
+    auto qc = make_qc(nodeIp, nodePort);
+    uint8_t privateKey[32] = {0};
+    uint8_t sourcePublicKey[32] = {0};
+    uint8_t destPublicKey[32] = {0};
+    uint8_t subSeed[32] = {0};
+    uint8_t digest[32] = {0};
+    uint8_t signature[64] = {0};
+    uint8_t TokenIssuerPublicKey[32] = {0};
+    char txHash[128] = {0};
+
+    getSubseedFromSeed((uint8_t*)seed, subSeed);
+    getPrivateKeyFromSubSeed(subSeed, privateKey);
+    getPublicKeyFromPrivateKey(privateKey, sourcePublicKey);
+    getPublicKeyFromIdentity(QPOOL_ADDRESS, destPublicKey);
+    ((uint64_t*)destPublicKey)[0] = QPOOL_CONTRACT_ID;
+    ((uint64_t*)destPublicKey)[1] = 0;
+    ((uint64_t*)destPublicKey)[2] = 0;
+    ((uint64_t*)destPublicKey)[3] = 0;
+    struct {
+        RequestResponseHeader header;
+        Transaction transaction;
+        BIGStringToNumber_input ia;
+        uint8_t sig[SIGNATURE_SIZE];
+    } packet;
+    memcpy(packet.transaction.sourcePublicKey, sourcePublicKey, 32);
+    memcpy(packet.transaction.destinationPublicKey, destPublicKey, 32);
+    packet.transaction.amount = 30;  //    Swap fee is 1% but should provide enough amount. it will be refunded the rest amount excluding 1% for swap fee
+    uint32_t scheduledTick = 0;
+    if (scheduledTickOffset < 50000){
+        uint32_t currentTick = getTickNumberFromNode(qc);
+        scheduledTick = currentTick + scheduledTickOffset;
+    } else {
+        scheduledTick = scheduledTickOffset;
+    }
+    packet.transaction.tick = scheduledTick;
+    packet.transaction.inputType = QPOOL_BIGSTRINGTO_NUMBER;
+    packet.transaction.inputSize = sizeof(BIGStringToNumber_input);
+
+    // fill the input
+    packet.ia.len = lengthOfNumber;
+    if(stringnumber[0] == 45) {     /// if '-'
+        packet.ia.a[0] = 45;
+        for(uint8_t i = 1 ; i < lengthOfNumber; i++) packet.ia.a[i] = stringnumber[i] + '0';
+    }
+    else {
+        for(uint8_t i = 0 ; i < lengthOfNumber; i++) packet.ia.a[i] = stringnumber[i] + '0';
+    }
+    // sign the packet
+    KangarooTwelve((unsigned char*)&packet.transaction,
+                   sizeof(Transaction) + sizeof(BIGStringToNumber_input),
+                   digest,
+                   32);
+    sign(subSeed, sourcePublicKey, digest, signature);
+    memcpy(packet.sig, signature, SIGNATURE_SIZE);
+    // set header
+    packet.header.setSize(sizeof(packet.header)+sizeof(Transaction)+sizeof(BIGStringToNumber_input)+ SIGNATURE_SIZE);
+    packet.header.zeroDejavu();
+    packet.header.setType(BROADCAST_TRANSACTION);
+
+    qc->sendData((uint8_t *) &packet, packet.header.size());
+    KangarooTwelve((unsigned char*)&packet.transaction,
+                   sizeof(Transaction)+sizeof(BIGStringToNumber_input)+ SIGNATURE_SIZE,
+                   digest,
+                   32); // recompute digest for txhash
+    getTxHashFromDigest(digest, txHash);
+    LOG("Transaction has been sent!\n");
+    printReceipt(packet.transaction, txHash, reinterpret_cast<const uint8_t *>(&packet.ia));
+    LOG("run ./qubic-cli [...] -checktxontick %u %s\n", scheduledTick, txHash);
+    LOG("to check your tx confirmation status\n");
+}
+
+
+void qpoolbigplus(char* nodeIp, int nodePort,
+                    const char* seed,
+                    uint8_t alen,
+                    uint8_t* a,
+                    uint8_t blen,
+                    uint8_t* b,
+                    uint32_t scheduledTickOffset)
+{
+    auto qc = make_qc(nodeIp, nodePort);
+    uint8_t privateKey[32] = {0};
+    uint8_t sourcePublicKey[32] = {0};
+    uint8_t destPublicKey[32] = {0};
+    uint8_t subSeed[32] = {0};
+    uint8_t digest[32] = {0};
+    uint8_t signature[64] = {0};
+    uint8_t TokenIssuerPublicKey[32] = {0};
+    char txHash[128] = {0};
+
+    getSubseedFromSeed((uint8_t*)seed, subSeed);
+    getPrivateKeyFromSubSeed(subSeed, privateKey);
+    getPublicKeyFromPrivateKey(privateKey, sourcePublicKey);
+    getPublicKeyFromIdentity(QPOOL_ADDRESS, destPublicKey);
+    ((uint64_t*)destPublicKey)[0] = QPOOL_CONTRACT_ID;
+    ((uint64_t*)destPublicKey)[1] = 0;
+    ((uint64_t*)destPublicKey)[2] = 0;
+    ((uint64_t*)destPublicKey)[3] = 0;
+    struct {
+        RequestResponseHeader header;
+        Transaction transaction;
+        BIGPlus_input ia;
+        uint8_t sig[SIGNATURE_SIZE];
+    } packet;
+    memcpy(packet.transaction.sourcePublicKey, sourcePublicKey, 32);
+    memcpy(packet.transaction.destinationPublicKey, destPublicKey, 32);
+    packet.transaction.amount = 30;  //    Swap fee is 1% but should provide enough amount. it will be refunded the rest amount excluding 1% for swap fee
+    uint32_t scheduledTick = 0;
+    if (scheduledTickOffset < 50000){
+        uint32_t currentTick = getTickNumberFromNode(qc);
+        scheduledTick = currentTick + scheduledTickOffset;
+    } else {
+        scheduledTick = scheduledTickOffset;
+    }
+    packet.transaction.tick = scheduledTick;
+    packet.transaction.inputType = QPOOL_BIGPLUS;
+    packet.transaction.inputSize = sizeof(BIGPlus_input);
+
+    // fill the input
+    packet.ia.alen = alen;
+    packet.ia.blen = blen;
+    for(uint8_t i = 0 ; i < alen; i++) packet.ia.a[i] = a[i] + '0';
+    for(uint8_t i = 0 ; i < blen; i++) packet.ia.b[i] = b[i] + '0';
+    // sign the packet
+    KangarooTwelve((unsigned char*)&packet.transaction,
+                   sizeof(Transaction) + sizeof(BIGPlus_input),
+                   digest,
+                   32);
+    sign(subSeed, sourcePublicKey, digest, signature);
+    memcpy(packet.sig, signature, SIGNATURE_SIZE);
+    // set header
+    packet.header.setSize(sizeof(packet.header)+sizeof(Transaction)+sizeof(BIGPlus_input)+ SIGNATURE_SIZE);
+    packet.header.zeroDejavu();
+    packet.header.setType(BROADCAST_TRANSACTION);
+
+    qc->sendData((uint8_t *) &packet, packet.header.size());
+    KangarooTwelve((unsigned char*)&packet.transaction,
+                   sizeof(Transaction)+sizeof(BIGPlus_input)+ SIGNATURE_SIZE,
+                   digest,
+                   32); // recompute digest for txhash
+    getTxHashFromDigest(digest, txHash);
+    LOG("Transaction has been sent!\n");
+    printReceipt(packet.transaction, txHash, reinterpret_cast<const uint8_t *>(&packet.ia));
+    LOG("run ./qubic-cli [...] -checktxontick %u %s\n", scheduledTick, txHash);
+    LOG("to check your tx confirmation status\n");
+}
+
+void qpoolbigminus(char* nodeIp, int nodePort,
+                    const char* seed,
+                    uint8_t alen,
+                    uint8_t* a,
+                    uint8_t blen,
+                    uint8_t* b,
+                    uint32_t scheduledTickOffset)
+{
+    auto qc = make_qc(nodeIp, nodePort);
+    uint8_t privateKey[32] = {0};
+    uint8_t sourcePublicKey[32] = {0};
+    uint8_t destPublicKey[32] = {0};
+    uint8_t subSeed[32] = {0};
+    uint8_t digest[32] = {0};
+    uint8_t signature[64] = {0};
+    uint8_t TokenIssuerPublicKey[32] = {0};
+    char txHash[128] = {0};
+
+    getSubseedFromSeed((uint8_t*)seed, subSeed);
+    getPrivateKeyFromSubSeed(subSeed, privateKey);
+    getPublicKeyFromPrivateKey(privateKey, sourcePublicKey);
+    getPublicKeyFromIdentity(QPOOL_ADDRESS, destPublicKey);
+    ((uint64_t*)destPublicKey)[0] = QPOOL_CONTRACT_ID;
+    ((uint64_t*)destPublicKey)[1] = 0;
+    ((uint64_t*)destPublicKey)[2] = 0;
+    ((uint64_t*)destPublicKey)[3] = 0;
+    struct {
+        RequestResponseHeader header;
+        Transaction transaction;
+        BIGMinus_input ia;
+        uint8_t sig[SIGNATURE_SIZE];
+    } packet;
+    memcpy(packet.transaction.sourcePublicKey, sourcePublicKey, 32);
+    memcpy(packet.transaction.destinationPublicKey, destPublicKey, 32);
+    packet.transaction.amount = 30;  //    Swap fee is 1% but should provide enough amount. it will be refunded the rest amount excluding 1% for swap fee
+    uint32_t scheduledTick = 0;
+    if (scheduledTickOffset < 50000){
+        uint32_t currentTick = getTickNumberFromNode(qc);
+        scheduledTick = currentTick + scheduledTickOffset;
+    } else {
+        scheduledTick = scheduledTickOffset;
+    }
+    packet.transaction.tick = scheduledTick;
+    packet.transaction.inputType = QPOOL_BIGMINUS;
+    packet.transaction.inputSize = sizeof(BIGMinus_input);
+
+    // fill the input
+    packet.ia.alen = alen;
+    packet.ia.blen = blen;
+    for(uint8_t i = 0 ; i < alen; i++) packet.ia.a[i] = a[i] + '0';
+    for(uint8_t i = 0 ; i < blen; i++) packet.ia.b[i] = b[i] + '0';
+    // sign the packet
+    KangarooTwelve((unsigned char*)&packet.transaction,
+                   sizeof(Transaction) + sizeof(BIGMinus_input),
+                   digest,
+                   32);
+    sign(subSeed, sourcePublicKey, digest, signature);
+    memcpy(packet.sig, signature, SIGNATURE_SIZE);
+    // set header
+    packet.header.setSize(sizeof(packet.header)+sizeof(Transaction)+sizeof(BIGMinus_input)+ SIGNATURE_SIZE);
+    packet.header.zeroDejavu();
+    packet.header.setType(BROADCAST_TRANSACTION);
+
+    qc->sendData((uint8_t *) &packet, packet.header.size());
+    KangarooTwelve((unsigned char*)&packet.transaction,
+                   sizeof(Transaction)+sizeof(BIGMinus_input)+ SIGNATURE_SIZE,
+                   digest,
+                   32); // recompute digest for txhash
+    getTxHashFromDigest(digest, txHash);
+    LOG("Transaction has been sent!\n");
+    printReceipt(packet.transaction, txHash, reinterpret_cast<const uint8_t *>(&packet.ia));
+    LOG("run ./qubic-cli [...] -checktxontick %u %s\n", scheduledTick, txHash);
+    LOG("to check your tx confirmation status\n");
+}
+
+void qpoolbigmulti(char* nodeIp, int nodePort,
+                    const char* seed,
+                    uint8_t alen,
+                    uint8_t* a,
+                    uint8_t blen,
+                    uint8_t* b,
+                    uint32_t scheduledTickOffset)
+{
+    auto qc = make_qc(nodeIp, nodePort);
+    uint8_t privateKey[32] = {0};
+    uint8_t sourcePublicKey[32] = {0};
+    uint8_t destPublicKey[32] = {0};
+    uint8_t subSeed[32] = {0};
+    uint8_t digest[32] = {0};
+    uint8_t signature[64] = {0};
+    uint8_t TokenIssuerPublicKey[32] = {0};
+    char txHash[128] = {0};
+
+    getSubseedFromSeed((uint8_t*)seed, subSeed);
+    getPrivateKeyFromSubSeed(subSeed, privateKey);
+    getPublicKeyFromPrivateKey(privateKey, sourcePublicKey);
+    getPublicKeyFromIdentity(QPOOL_ADDRESS, destPublicKey);
+    ((uint64_t*)destPublicKey)[0] = QPOOL_CONTRACT_ID;
+    ((uint64_t*)destPublicKey)[1] = 0;
+    ((uint64_t*)destPublicKey)[2] = 0;
+    ((uint64_t*)destPublicKey)[3] = 0;
+    struct {
+        RequestResponseHeader header;
+        Transaction transaction;
+        BIGMultiple_input ia;
+        uint8_t sig[SIGNATURE_SIZE];
+    } packet;
+    memcpy(packet.transaction.sourcePublicKey, sourcePublicKey, 32);
+    memcpy(packet.transaction.destinationPublicKey, destPublicKey, 32);
+    packet.transaction.amount = 30;  //    Swap fee is 1% but should provide enough amount. it will be refunded the rest amount excluding 1% for swap fee
+    uint32_t scheduledTick = 0;
+    if (scheduledTickOffset < 50000){
+        uint32_t currentTick = getTickNumberFromNode(qc);
+        scheduledTick = currentTick + scheduledTickOffset;
+    } else {
+        scheduledTick = scheduledTickOffset;
+    }
+    packet.transaction.tick = scheduledTick;
+    packet.transaction.inputType = QPOOL_BIGMULTI;
+    packet.transaction.inputSize = sizeof(BIGMultiple_input);
+
+    // fill the input
+    packet.ia.alen = alen;
+    packet.ia.blen = blen;
+    if(a[0] == 45) {
+        packet.ia.a[0] = 45;
+        for(uint8_t i = 1 ; i < alen; i++) packet.ia.a[i] = a[i] + '0';
+    }
+    else {
+        for(uint8_t i = 0 ; i < alen; i++) packet.ia.a[i] = a[i] + '0';
+    }
+    if(b[0] == 45) {
+        packet.ia.b[0] = 45;
+        for(uint8_t i = 1 ; i < blen; i++) packet.ia.b[i] = b[i] + '0';
+    }
+    else {
+        for(uint8_t i = 0 ; i < blen; i++) packet.ia.b[i] = b[i] + '0';
+    }
+    // sign the packet
+    KangarooTwelve((unsigned char*)&packet.transaction,
+                   sizeof(Transaction) + sizeof(BIGMultiple_input),
+                   digest,
+                   32);
+    sign(subSeed, sourcePublicKey, digest, signature);
+    memcpy(packet.sig, signature, SIGNATURE_SIZE);
+    // set header
+    packet.header.setSize(sizeof(packet.header)+sizeof(Transaction)+sizeof(BIGMultiple_input)+ SIGNATURE_SIZE);
+    packet.header.zeroDejavu();
+    packet.header.setType(BROADCAST_TRANSACTION);
+
+    qc->sendData((uint8_t *) &packet, packet.header.size());
+    KangarooTwelve((unsigned char*)&packet.transaction,
+                   sizeof(Transaction)+sizeof(BIGMultiple_input)+ SIGNATURE_SIZE,
                    digest,
                    32); // recompute digest for txhash
     getTxHashFromDigest(digest, txHash);
