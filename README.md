@@ -121,7 +121,22 @@ Command:
 		Get the information of a pool
 	-qpoolswap <AMOUNT_OF_TOKEN1> <INDEX_OF_TOKEN1> <INDEX_OF_TOKEN2> <NUMBER_OF_POOL>
 		Swap the <INDEX_OF_TOKEN1> to <INDEX_OF_TOKEN2> in <NUMBER_OF_POOL>
-	
+	-qpoolbiggetstatus
+		current status of calculation for BIG multiprecision
+	-qpoolbignumbertostring <BIG_NUMBER>
+		<BIG_NUMBER> is bit256
+	-qpoolbigstringtonumber <LENGTH_OF_STRINGNUMBER> [<FIRST_NUM>, <SECOND_NUM>, ... <LENGH - 1>]
+		<LENGTH_OF_STRINGNUMBER> is length of string number.
+		<FIRST_NUM>, <SECOND_NUM> are each number of string number
+	-qpoolbigplus <LENGTH_OF_STRINGNUMBER_A> [<FIRST_NUM_A>, <SECOND_NUM_A>, ... <LENGH - 1>] <LENGTH_OF_STRINGNUMBER_B> [<FIRST_NUM_B>, <SECOND_NUM_B>, <LENGH - 1>]
+		<LENGTH_OF_STRINGNUMBER_A> is length of string number A.
+		<LENGTH_OF_STRINGNUMBER_B> is length of string number B.
+	-qpoolbigminus  <LENGTH_OF_STRINGNUMBER_A> [<FIRST_NUM_A>, <SECOND_NUM_A>, ... <LENGH - 1>] <LENGTH_OF_STRINGNUMBER_B> [<FIRST_NUM_B>, <SECOND_NUM_B>, <LENGH - 1>]
+		<LENGTH_OF_STRINGNUMBER_A> is length of string number A.
+		<LENGTH_OF_STRINGNUMBER_B> is length of string number B.
+	-qpoolbigmultiple <LENGTH_OF_STRINGNUMBER_A> [<FIRST_NUM_A>, <SECOND_NUM_A>, ... <LENGH - 1>] <LENGTH_OF_STRINGNUMBER_B> [<FIRST_NUM_B>, <SECOND_NUM_B>, <LENGH - 1>]
+		<LENGTH_OF_STRINGNUMBER_A> is length of string number A.
+		<LENGTH_OF_STRINGNUMBER_B> is length of string number B.
 
 [QTRY COMMAND]
 	-qtrygetfee

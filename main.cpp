@@ -394,7 +394,58 @@ int run(int argc, char* argv[])
         makeproposal(g_nodeIp, g_nodePort, g_seed,
                         g_proposal_computor,
                         g_proposal_uri);
-         break;
+        break;
+        case QPOOL_BIGNUMBER_TO_STRING:
+        sanityCheckNode(g_nodeIp, g_nodePort);
+        sanityCheckSeed(g_seed);
+        qpoolbignumberTostring(g_nodeIp, g_nodePort, g_seed,
+                        g_qpool_bignumber_to_string,
+                        g_offsetScheduledTick);
+        break;
+        case QPOOL_BIGNUMBER_GET_STATUS:
+        sanityCheckNode(g_nodeIp, g_nodePort);
+        sanityCheckSeed(g_seed);
+        qpoolbignumbergetstatus(g_nodeIp, g_nodePort, g_seed,
+                        g_offsetScheduledTick);
+        break;
+        case QPOOL_BIGSTRING_TO_NUMBER:
+        sanityCheckNode(g_nodeIp, g_nodePort);
+        sanityCheckSeed(g_seed);
+        qpoolbigstringTonumber(g_nodeIp, g_nodePort, g_seed,
+                        g_qpool_bigstring_to_number_length,
+                        g_qpool_bigstring_to_numbers,
+                        g_offsetScheduledTick);
+        break;
+        case QPOOL_BIGPLUS:
+        sanityCheckNode(g_nodeIp, g_nodePort);
+        sanityCheckSeed(g_seed);
+        qpoolbigplus(g_nodeIp, g_nodePort, g_seed,
+                        g_qpool_bigoperation_alen,
+                        g_qpool_bigoperation_a,
+                        g_qpool_bigoperation_blen,
+                        g_qpool_bigoperation_b,
+                        g_offsetScheduledTick);
+        break;
+        case QPOOL_BIGMINUS:
+        sanityCheckNode(g_nodeIp, g_nodePort);
+        sanityCheckSeed(g_seed);
+        qpoolbigminus(g_nodeIp, g_nodePort, g_seed,
+                        g_qpool_bigoperation_alen,
+                        g_qpool_bigoperation_a,
+                        g_qpool_bigoperation_blen,
+                        g_qpool_bigoperation_b,
+                        g_offsetScheduledTick);
+        break;
+        case QPOOL_BIGMULTIPLE:
+        sanityCheckNode(g_nodeIp, g_nodePort);
+        sanityCheckSeed(g_seed);
+        qpoolbigmulti(g_nodeIp, g_nodePort, g_seed,
+                        g_qpool_bigoperation_alen,
+                        g_qpool_bigoperation_a,
+                        g_qpool_bigoperation_blen,
+                        g_qpool_bigoperation_b,
+                        g_offsetScheduledTick);
+        break;
         default:
             printf("Unexpected command!\n");
             break;

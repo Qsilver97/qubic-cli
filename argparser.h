@@ -787,6 +787,91 @@ void parseArgument(int argc, char** argv){
             CHECK_OVER_PARAMETERS
             break;
         }
+        if(strcmp(argv[i], "-qpoolbiggetstatus") == 0)
+        {
+            g_cmd = QPOOL_BIGNUMBER_GET_STATUS;
+            i+=1;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolbignumbertostring") == 0)
+        {
+            g_cmd = QPOOL_BIGNUMBER_TO_STRING;
+            g_qpool_bignumber_to_string = charToNumber(argv[i + 1]);
+            i+=2;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolbigstringtonumber") == 0)
+        {
+            g_cmd = QPOOL_BIGSTRING_TO_NUMBER;
+            g_qpool_bigstring_to_number_length = charToNumber(argv[i + 1]);
+            if(strcmp(argv[i + 2], "-") == 0) {
+                g_qpool_bigstring_to_numbers[0] = 45;    // ASCII value of '-' is 45
+                for(uint8_t j = 1; j < g_qpool_bigstring_to_number_length; j++) g_qpool_bigstring_to_numbers[j] = charToNumber(argv[i + j + 2]);
+            }
+            else {
+                for(uint8_t j = 0; j < g_qpool_bigstring_to_number_length; j++) g_qpool_bigstring_to_numbers[j] = charToNumber(argv[i + j + 2]);
+            }
+            i+=g_qpool_bigstring_to_number_length + 2;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolbigplus") == 0)
+        {
+            g_cmd = QPOOL_BIGPLUS;
+            g_qpool_bigoperation_alen = charToNumber(argv[i + 1]);
+
+            for(uint8_t j = 0 ; j < g_qpool_bigoperation_alen; j++) g_qpool_bigoperation_a[j] = charToNumber(argv[i + j + 2]);
+
+            g_qpool_bigoperation_blen = charToNumber(argv[i + g_qpool_bigoperation_alen + 2]);
+
+            for(uint8_t j = 0 ; j < g_qpool_bigoperation_blen; j++) g_qpool_bigoperation_b[j] = charToNumber(argv[i + g_qpool_bigoperation_alen + j + 3]);
+            
+            i+=g_qpool_bigoperation_alen + g_qpool_bigoperation_blen + 3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolbigminus") == 0)
+        {
+            g_cmd = QPOOL_BIGMINUS;
+            g_qpool_bigoperation_alen = charToNumber(argv[i + 1]);
+
+            for(uint8_t j = 0 ; j < g_qpool_bigoperation_alen; j++) g_qpool_bigoperation_a[j] = charToNumber(argv[i + j + 2]);
+
+            g_qpool_bigoperation_blen = charToNumber(argv[i + g_qpool_bigoperation_alen + 2]);
+
+            for(uint8_t j = 0 ; j < g_qpool_bigoperation_blen; j++) g_qpool_bigoperation_b[j] = charToNumber(argv[i + g_qpool_bigoperation_alen + j + 3]);
+            
+            i+=g_qpool_bigoperation_alen + g_qpool_bigoperation_blen + 3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolbigmultiple") == 0)
+        {
+            g_cmd = QPOOL_BIGMULTIPLE;
+            g_qpool_bigoperation_alen = charToNumber(argv[i + 1]);
+            if(strcmp(argv[i + 2], "-") == 0) {
+                g_qpool_bigoperation_a[0] = 45;
+                for(uint8_t j = 1 ; j < g_qpool_bigoperation_alen; j++) g_qpool_bigoperation_a[j] = charToNumber(argv[i + j + 2]);
+            }
+            else {
+                for(uint8_t j = 0 ; j < g_qpool_bigoperation_alen; j++) g_qpool_bigoperation_a[j] = charToNumber(argv[i + j + 2]);
+            }
+
+            g_qpool_bigoperation_blen = charToNumber(argv[i + g_qpool_bigoperation_alen + 2]);
+
+            if(strcmp(argv[i + g_qpool_bigoperation_alen + 3], "-") == 0) {
+                g_qpool_bigoperation_b[0] = 45;
+                for(uint8_t j = 1 ; j < g_qpool_bigoperation_blen; j++) g_qpool_bigoperation_b[j] = charToNumber(argv[i + g_qpool_bigoperation_alen + j + 3]);
+            }
+            else {
+                for(uint8_t j = 0 ; j < g_qpool_bigoperation_blen; j++) g_qpool_bigoperation_b[j] = charToNumber(argv[i + g_qpool_bigoperation_alen + j + 3]);
+            }
+            i+=g_qpool_bigoperation_alen + g_qpool_bigoperation_blen + 3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
         i++;
     }
     if (g_configFile != nullptr)
