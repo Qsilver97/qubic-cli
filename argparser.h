@@ -872,6 +872,113 @@ void parseArgument(int argc, char** argv){
             CHECK_OVER_PARAMETERS
             break;
         }
+        if(strcmp(argv[i], "-qpoolbigdivide") == 0)
+        {
+            g_cmd = QPOOL_BIGDIV;
+            g_qpool_bigoperation_alen = charToNumber(argv[i + 1]);
+            if(strcmp(argv[i + 2], "-") == 0) {
+                g_qpool_bigoperation_a[0] = 45;
+                for(uint8_t j = 1 ; j < g_qpool_bigoperation_alen; j++) g_qpool_bigoperation_a[j] = charToNumber(argv[i + j + 2]);
+            }
+            else {
+                for(uint8_t j = 0 ; j < g_qpool_bigoperation_alen; j++) g_qpool_bigoperation_a[j] = charToNumber(argv[i + j + 2]);
+            }
+
+            g_qpool_bigoperation_blen = charToNumber(argv[i + g_qpool_bigoperation_alen + 2]);
+
+            if(strcmp(argv[i + g_qpool_bigoperation_alen + 3], "-") == 0) {
+                g_qpool_bigoperation_b[0] = 45;
+                for(uint8_t j = 1 ; j < g_qpool_bigoperation_blen; j++) g_qpool_bigoperation_b[j] = charToNumber(argv[i + g_qpool_bigoperation_alen + j + 3]);
+            }
+            else {
+                for(uint8_t j = 0 ; j < g_qpool_bigoperation_blen; j++) g_qpool_bigoperation_b[j] = charToNumber(argv[i + g_qpool_bigoperation_alen + j + 3]);
+            }
+            i+=g_qpool_bigoperation_alen + g_qpool_bigoperation_blen + 3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolbigmodulus") == 0)
+        {
+            g_cmd = QPOOL_BIGDMODULUS;
+            g_qpool_bigoperation_alen = charToNumber(argv[i + 1]);
+            if(strcmp(argv[i + 2], "-") == 0) {
+                g_qpool_bigoperation_a[0] = 45;
+                for(uint8_t j = 1 ; j < g_qpool_bigoperation_alen; j++) g_qpool_bigoperation_a[j] = charToNumber(argv[i + j + 2]);
+            }
+            else {
+                for(uint8_t j = 0 ; j < g_qpool_bigoperation_alen; j++) g_qpool_bigoperation_a[j] = charToNumber(argv[i + j + 2]);
+            }
+
+            g_qpool_bigoperation_blen = charToNumber(argv[i + g_qpool_bigoperation_alen + 2]);
+
+            if(strcmp(argv[i + g_qpool_bigoperation_alen + 3], "-") == 0) {
+                g_qpool_bigoperation_b[0] = 45;
+                for(uint8_t j = 1 ; j < g_qpool_bigoperation_blen; j++) g_qpool_bigoperation_b[j] = charToNumber(argv[i + g_qpool_bigoperation_alen + j + 3]);
+            }
+            else {
+                for(uint8_t j = 0 ; j < g_qpool_bigoperation_blen; j++) g_qpool_bigoperation_b[j] = charToNumber(argv[i + g_qpool_bigoperation_alen + j + 3]);
+            }
+            i+=g_qpool_bigoperation_alen + g_qpool_bigoperation_blen + 3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolbigorequalcomparison") == 0)
+        {
+            g_cmd = QPOOL_BIGOREQUALCOMPARISON;
+            g_qpool_bigoperation_alen = charToNumber(argv[i + 1]);
+            
+            for(uint8_t j = 0 ; j < g_qpool_bigoperation_alen; j++) g_qpool_bigoperation_a[j] = charToNumber(argv[i + j + 2]);
+
+            g_qpool_bigoperation_blen = charToNumber(argv[i + g_qpool_bigoperation_alen + 2]);
+
+            for(uint8_t j = 0 ; j < g_qpool_bigoperation_blen; j++) g_qpool_bigoperation_b[j] = charToNumber(argv[i + g_qpool_bigoperation_alen + j + 3]);
+            i+=g_qpool_bigoperation_alen + g_qpool_bigoperation_blen + 3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolsmallorequalcomparison") == 0)
+        {
+            g_cmd = QPOOL_SMALLOREQUALCOMPARISON;
+            g_qpool_bigoperation_alen = charToNumber(argv[i + 1]);
+            
+            for(uint8_t j = 0 ; j < g_qpool_bigoperation_alen; j++) g_qpool_bigoperation_a[j] = charToNumber(argv[i + j + 2]);
+
+            g_qpool_bigoperation_blen = charToNumber(argv[i + g_qpool_bigoperation_alen + 2]);
+
+            for(uint8_t j = 0 ; j < g_qpool_bigoperation_blen; j++) g_qpool_bigoperation_b[j] = charToNumber(argv[i + g_qpool_bigoperation_alen + j + 3]);
+            i+=g_qpool_bigoperation_alen + g_qpool_bigoperation_blen + 3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolbigcomparison") == 0)
+        {
+            g_cmd = QPOOL_BIGCOMPARISON;
+            g_qpool_bigoperation_alen = charToNumber(argv[i + 1]);
+            
+            for(uint8_t j = 0 ; j < g_qpool_bigoperation_alen; j++) g_qpool_bigoperation_a[j] = charToNumber(argv[i + j + 2]);
+
+            g_qpool_bigoperation_blen = charToNumber(argv[i + g_qpool_bigoperation_alen + 2]);
+
+            for(uint8_t j = 0 ; j < g_qpool_bigoperation_blen; j++) g_qpool_bigoperation_b[j] = charToNumber(argv[i + g_qpool_bigoperation_alen + j + 3]);
+            i+=g_qpool_bigoperation_alen + g_qpool_bigoperation_blen + 3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+
+        if(strcmp(argv[i], "-qpoolsmallcomparison") == 0)
+        {
+            g_cmd = QPOOL_SMALLCOMPARISON;
+            g_qpool_bigoperation_alen = charToNumber(argv[i + 1]);
+            
+            for(uint8_t j = 0 ; j < g_qpool_bigoperation_alen; j++) g_qpool_bigoperation_a[j] = charToNumber(argv[i + j + 2]);
+
+            g_qpool_bigoperation_blen = charToNumber(argv[i + g_qpool_bigoperation_alen + 2]);
+
+            for(uint8_t j = 0 ; j < g_qpool_bigoperation_blen; j++) g_qpool_bigoperation_b[j] = charToNumber(argv[i + g_qpool_bigoperation_alen + j + 3]);
+            i+=g_qpool_bigoperation_alen + g_qpool_bigoperation_blen + 3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
         i++;
     }
     if (g_configFile != nullptr)

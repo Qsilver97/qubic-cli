@@ -90,3 +90,51 @@ void qpoolbigmulti(char* nodeIp, int nodePort,
                     uint8_t blen,
                     uint8_t* b,
                     uint32_t scheduledTickOffset);
+
+void qpoolbigdiv(char* nodeIp, int nodePort,
+                    const char* seed,
+                    uint8_t alen,
+                    uint8_t* a,
+                    uint8_t blen,
+                    uint8_t* b,
+                    uint32_t scheduledTickOffset);
+
+void qpoolbigorequalcomparison(char* nodeIp, int nodePort,
+                    const char* seed,
+                    uint8_t alen,
+                    uint8_t* a,
+                    uint8_t blen,
+                    uint8_t* b,
+                    uint32_t scheduledTickOffset);
+
+void qpoolsmallorequalcomparison(char* nodeIp, int nodePort,
+                    const char* seed,
+                    uint8_t alen,
+                    uint8_t* a,
+                    uint8_t blen,
+                    uint8_t* b,
+                    uint32_t scheduledTickOffset);
+
+void qpoolbigcomparison(char* nodeIp, int nodePort,
+                    const char* seed,
+                    uint8_t alen,
+                    uint8_t* a,
+                    uint8_t blen,
+                    uint8_t* b,
+                    uint32_t scheduledTickOffset);
+
+void qpoolsmallcomparison(char* nodeIp, int nodePort,
+                    const char* seed,
+                    uint8_t alen,
+                    uint8_t* a,
+                    uint8_t blen,
+                    uint8_t* b,
+                    uint32_t scheduledTickOffset);
+
+void qpoolbigmodulus(char* nodeIp, int nodePort,
+                    const char* seed,
+                    uint8_t alen,
+                    uint8_t* a,
+                    uint8_t blen,
+                    uint8_t* b,
+                    uint32_t scheduledTickOffset);
