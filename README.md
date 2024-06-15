@@ -137,6 +137,21 @@ Command:
 	-qpoolbigmultiple <LENGTH_OF_STRINGNUMBER_A> [<FIRST_NUM_A>, <SECOND_NUM_A>, ... <LENGH - 1>] <LENGTH_OF_STRINGNUMBER_B> [<FIRST_NUM_B>, <SECOND_NUM_B>, <LENGH - 1>]
 		<LENGTH_OF_STRINGNUMBER_A> is length of string number A.
 		<LENGTH_OF_STRINGNUMBER_B> is length of string number B.
+	-qpoolbigmodulus <LENGTH_OF_STRINGNUMBER_A> [<FIRST_NUM_A>, <SECOND_NUM_A>, ... <LENGH - 1>] <LENGTH_OF_STRINGNUMBER_B> [<FIRST_NUM_B>, <SECOND_NUM_B>, <LENGH - 1>]
+		<LENGTH_OF_STRINGNUMBER_A> is length of string number A.
+		<LENGTH_OF_STRINGNUMBER_B> is length of string number B.
+	-qpoolbigorequalcomparison <LENGTH_OF_STRINGNUMBER_A> [<FIRST_NUM_A>, <SECOND_NUM_A>, ... <LENGH - 1>] <LENGTH_OF_STRINGNUMBER_B> [<FIRST_NUM_B>, <SECOND_NUM_B>, <LENGH - 1>]
+		<LENGTH_OF_STRINGNUMBER_A> is length of string number A.
+		<LENGTH_OF_STRINGNUMBER_B> is length of string number B.
+	-qpoolsmallorequalcomparison <LENGTH_OF_STRINGNUMBER_A> [<FIRST_NUM_A>, <SECOND_NUM_A>, ... <LENGH - 1>] <LENGTH_OF_STRINGNUMBER_B> [<FIRST_NUM_B>, <SECOND_NUM_B>, <LENGH - 1>]
+		<LENGTH_OF_STRINGNUMBER_A> is length of string number A.
+		<LENGTH_OF_STRINGNUMBER_B> is length of string number B.
+	-qpoolbigcomparison <LENGTH_OF_STRINGNUMBER_A> [<FIRST_NUM_A>, <SECOND_NUM_A>, ... <LENGH - 1>] <LENGTH_OF_STRINGNUMBER_B> [<FIRST_NUM_B>, <SECOND_NUM_B>, <LENGH - 1>]
+		<LENGTH_OF_STRINGNUMBER_A> is length of string number A.
+		<LENGTH_OF_STRINGNUMBER_B> is length of string number B.
+	-qpoolsmallcomparison <LENGTH_OF_STRINGNUMBER_A> [<FIRST_NUM_A>, <SECOND_NUM_A>, ... <LENGH - 1>] <LENGTH_OF_STRINGNUMBER_B> [<FIRST_NUM_B>, <SECOND_NUM_B>, <LENGH - 1>]
+		<LENGTH_OF_STRINGNUMBER_A> is length of string number A.
+		<LENGTH_OF_STRINGNUMBER_B> is length of string number B.
 
 [QTRY COMMAND]
 	-qtrygetfee

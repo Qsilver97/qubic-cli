@@ -446,6 +446,66 @@ int run(int argc, char* argv[])
                         g_qpool_bigoperation_b,
                         g_offsetScheduledTick);
         break;
+        case QPOOL_BIGDIV:
+        sanityCheckNode(g_nodeIp, g_nodePort);
+        sanityCheckSeed(g_seed);
+        qpoolbigdiv(g_nodeIp, g_nodePort, g_seed,
+                        g_qpool_bigoperation_alen,
+                        g_qpool_bigoperation_a,
+                        g_qpool_bigoperation_blen,
+                        g_qpool_bigoperation_b,
+                        g_offsetScheduledTick);
+        break;
+        case QPOOL_BIGDMODULUS:
+        sanityCheckNode(g_nodeIp, g_nodePort);
+        sanityCheckSeed(g_seed);
+        qpoolbigmodulus(g_nodeIp, g_nodePort, g_seed,
+                        g_qpool_bigoperation_alen,
+                        g_qpool_bigoperation_a,
+                        g_qpool_bigoperation_blen,
+                        g_qpool_bigoperation_b,
+                        g_offsetScheduledTick);
+        break;
+        case QPOOL_BIGOREQUALCOMPARISON:
+        sanityCheckNode(g_nodeIp, g_nodePort);
+        sanityCheckSeed(g_seed);
+        qpoolbigorequalcomparison(g_nodeIp, g_nodePort, g_seed,
+                        g_qpool_bigoperation_alen,
+                        g_qpool_bigoperation_a,
+                        g_qpool_bigoperation_blen,
+                        g_qpool_bigoperation_b,
+                        g_offsetScheduledTick);
+        break;
+        case QPOOL_SMALLOREQUALCOMPARISON:
+        sanityCheckNode(g_nodeIp, g_nodePort);
+        sanityCheckSeed(g_seed);
+        qpoolsmallorequalcomparison(g_nodeIp, g_nodePort, g_seed,
+                        g_qpool_bigoperation_alen,
+                        g_qpool_bigoperation_a,
+                        g_qpool_bigoperation_blen,
+                        g_qpool_bigoperation_b,
+                        g_offsetScheduledTick);
+        break;
+        case QPOOL_BIGCOMPARISON:
+        sanityCheckNode(g_nodeIp, g_nodePort);
+        sanityCheckSeed(g_seed);
+        qpoolbigcomparison(g_nodeIp, g_nodePort, g_seed,
+                        g_qpool_bigoperation_alen,
+                        g_qpool_bigoperation_a,
+                        g_qpool_bigoperation_blen,
+                        g_qpool_bigoperation_b,
+                        g_offsetScheduledTick);
+        break;
+        case QPOOL_SMALLCOMPARISON:
+        sanityCheckNode(g_nodeIp, g_nodePort);
+        sanityCheckSeed(g_seed);
+        qpoolsmallcomparison(g_nodeIp, g_nodePort, g_seed,
+                        g_qpool_bigoperation_alen,
+                        g_qpool_bigoperation_a,
+                        g_qpool_bigoperation_blen,
+                        g_qpool_bigoperation_b,
+                        g_offsetScheduledTick);
+        break;
         default:
             printf("Unexpected command!\n");
             break;
