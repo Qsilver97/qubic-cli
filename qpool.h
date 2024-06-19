@@ -11,6 +11,8 @@ void QpoolCreate(const char* nodeIp, int nodePort,
                 int16_t* index_of_token,
                 int64_t* amount_of_token,
                 int8_t* weight_of_token,
+                int32_t* amount_of_microtoken,
+                bool* type_of_token,
                 int64_t swap_fee,
                 uint32_t offsetScheduledTick);
 
@@ -32,6 +34,8 @@ void qpoolenableToken(const char* nodeIp, int nodePort,
                     const char* seed,
                     char* assetname,
                     char* issuerOfAsset,
+                    uint16_t contractIndex,
+                    bool typeoftoken,
                     uint32_t scheduledTickOffset);
 
 void qpoolgetnumberofenableToken(const char* nodeIp, int nodePort,
@@ -41,6 +45,7 @@ void qpoolgetnumberofenableToken(const char* nodeIp, int nodePort,
 void qpoolgetenableToken(const char* nodeIp, int nodePort,
                     const char* seed,
                     uint32_t tokenID,
+                    bool typeoftoken,
                     uint32_t scheduledTickOffset);
                     
 
@@ -50,6 +55,26 @@ void qpoolswap(char* nodeIp, int nodePort,
                     uint16_t indexOfToken1,
                     uint16_t indexOfToken2,
                     uint16_t NumberOfPool,
+                    bool typeoftoken1,
+                    bool typeoftoken2,
+                    uint32_t scheduledTickOffset);
+
+void qpooldepositexpensivetoken(char* nodeIp, int nodePort,
+                    const char* seed,
+                    uint64_t Amountoftoken,
+                    uint16_t indexOfToken,
+                    uint32_t scheduledTickOffset);
+
+void qpoolwithdrawexpensivetoken(char* nodeIp, int nodePort,
+                    const char* seed,
+                    uint64_t Amountoftoken,
+                    uint16_t indexOfToken,
+                    uint32_t scheduledTickOffset);
+
+void qpoolgetamountofexpensivetokenuserdeposited(const char* nodeIp, int nodePort,
+                    const char* seed,
+                    char* user,
+                    uint16_t indexOfToken,
                     uint32_t scheduledTickOffset);
 
 void qpoolbignumberTostring(char* nodeIp, int nodePort,
