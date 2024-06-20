@@ -109,17 +109,17 @@ Command:
 [QPOOL COMMAND]
 	-qpoolissueasset <ASSET_NAME> <NUMBER_OF_UNIT> <UNIT_OF_MEASUREMENT> <NUM_DECIMAL>
         Create an token via Qpool contract.
-	-qpoolenabletoken <Name_OF_TOKEN> <ISSUER_OF_TOKEN>
+	-qpoolenabletoken <NAME_OF_TOKEN> <ISSUER_OF_TOKEN> <CONTRACT_INDEX> <TYPE_OF_TOKEN>
 		Enable a token in Qpool. Users can add the token to Qpool.
 	-qpoolgetnumberofenabletoken
 		Get the number of enable tokens in Qpool
-	-qpoolgetenabletoken <Enalble_Token_NUMBER>
+	-qpoolgetenabletoken <ENABLE_TOKEN_NUMBER> <TYPE_OF_TOKEN>
 		Get the information of a enable token in Qpool
-	-qpoolcreate <NAME_OF_LPTOKEN> <NUMBER_OF_TOKEN> <AMOUNT_OF_QWALLETTOKEN> <WEIGHT_OF_QWALLETTOKEN> <AMOUNT_OF_QU> [<TOKEN1_ID> <TOKEN2_ID>, ... <TOKEN4_ID> (FROM NUMBER_OF_TOKEN)] [<TOKEN1_AMOUNT>, <TOKEN2_AMOUNT>, ... <TOKEN4_AMOUNT> (FROM NUMBER_OF_TOKEN)] [ <TOKEN1_WEIGHT>,<TOKEN2_WEIGHT>, ... <TOKEN4_WEIGHT>  (FROM NUMBER_OF_TOKEN)] <SWAP_FEE>
+	-qpoolcreate <NAME_OF_LPTOKEN> <NUMBER_OF_TOKEN> <AMOUNT_OF_QWALLETTOKEN> <WEIGHT_OF_QWALLETTOKEN> <AMOUNT_OF_QU> [<TOKEN1_ID> <TOKEN2_ID>, ... <TOKEN4_ID> (FROM NUMBER_OF_TOKEN)] [<TOKEN1_AMOUNT>, <TOKEN2_AMOUNT>, ... <TOKEN4_AMOUNT> (FROM NUMBER_OF_TOKEN)] [ <TOKEN1_WEIGHT>,<TOKEN2_WEIGHT>, ... <TOKEN4_WEIGHT>  (FROM NUMBER_OF_TOKEN)] <SWAP_FEE> [<TOKEN1_MICROTOKEN_AMOUNT>, <TOKEN2_MICROTOKEN_AMOUNT>, ... <TOKEN4_MICROTOKEN_AMOUNT> (FROM NUMBER_OF_TOKEN)] [ <TOKEN1_TYPE_OF_TOKEN>,<TOKEN2_TYPE_OF_TOKEN>, ... <TOKEN4_TYPE_OF_TOKEN>  (FROM NUMBER_OF_TOKEN)]
 		Create a new pool. NUMBER_OF_TOKEN including the Qwallet token and qu. the number of token id and token amount and token weight following the NUMBER_OF_TOKEN.
 	-qpoolgetinfor <POOL_NUMBER>
 		Get the information of a pool
-	-qpoolswap <AMOUNT_OF_TOKEN1> <INDEX_OF_TOKEN1> <INDEX_OF_TOKEN2> <NUMBER_OF_POOL>
+	-qpoolswap <AMOUNT_OF_TOKEN1> <INDEX_OF_TOKEN1> <INDEX_OF_TOKEN2> <NUMBER_OF_POOL> <TYPE_OF_TOKEN1> <TYPE_OF_TOKEN2>
 		Swap the <INDEX_OF_TOKEN1> to <INDEX_OF_TOKEN2> in <NUMBER_OF_POOL>
 	-qpoolbiggetstatus
 		current status of calculation for BIG multiprecision
@@ -152,6 +152,15 @@ Command:
 	-qpoolsmallcomparison <LENGTH_OF_STRINGNUMBER_A> [<FIRST_NUM_A>, <SECOND_NUM_A>, ... <LENGH - 1>] <LENGTH_OF_STRINGNUMBER_B> [<FIRST_NUM_B>, <SECOND_NUM_B>, <LENGH - 1>]
 		<LENGTH_OF_STRINGNUMBER_A> is length of string number A.
 		<LENGTH_OF_STRINGNUMBER_B> is length of string number B.
+	-qpooldepositexpensivetoken <AMOUNT_OF_TOKEN> <INDEX_OF_TOKEN>
+		<AMOUNT_OF_TOKEN> is the amount of expensive token that want to deposit.
+		<INDEX_OF_TOKEN> is the index of expensive token that want to deposit.
+	-qpoolwithdrawexpensivetoken <AMOUNT_OF_TOKEN> <INDEX_OF_TOKEN>
+		<AMOUNT_OF_TOKEN> is the amount of expensive token that want to withdraw.
+		<INDEX_OF_TOKEN> is the index of expensive token that want to withdraw.
+	-qpoolGetAmountOfExpensiveTokenUserDeposited <DEPOSITER> <INDEX_OF_TOKEN>
+		<INDEX_OF_TOKEN> is the index of expensive token that user deposited in Qpool.
+
 
 [QTRY COMMAND]
 	-qtrygetfee

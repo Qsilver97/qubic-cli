@@ -30,8 +30,12 @@
 #define QPOOL_SMALLOREQUALCOMPARISON 18
 #define QPOOL_BIGCOMPARISON 19
 #define QPOOL_SMALLCOMPARISON 20
+#define QPOOL_DEPOSIT_EXPENSIVE_TOKEN 21
+#define QPOOL_WITHDRAW_EXPENSIVE_TOKEN 22
 #define FEE_CREATE_POOL 100000000LL
 #define TOKEN_TRANSER_FEE 1000LL // Amount of qus
+#define QPOOL_EXPENSIVE_TOKEN_DEPOSIT_FEE 10000LL
+#define QPOOL_EXPENSIVE_TOKEN_WITHDRAW_FEE 10000LL
 
 constexpr int QPOOL_CONTRACT_ID = 7;
 
@@ -53,6 +57,11 @@ struct CreateLiquidityPool_input {
     uint64_t initialAmount3;
     uint64_t initialAmount4;
 
+    uint32_t initialAmountForMicrotoken1;
+    uint32_t initialAmountForMicrotoken2;
+    uint32_t initialAmountForMicrotoken3;
+    uint32_t initialAmountForMicrotoken4;
+
     uint16_t IndexOfToken1;
     uint16_t IndexOfToken2;
     uint16_t IndexOfToken3;
@@ -65,6 +74,11 @@ struct CreateLiquidityPool_input {
     uint8_t Weight2;
     uint8_t Weight3;
     uint8_t Weight4;
+
+    bool TypeOfToken1;						// General token or Expensive token
+    bool TypeOfToken2;
+    bool TypeOfToken3;
+    bool TypeOfToken4;
 };
 
 struct CreateLiquidityPool_output {
@@ -89,8 +103,10 @@ struct PoolList_input {
 
 struct EnableToken_input
 {
-    uint64_t assetName;
     uint8_t issuer[32];
+    uint64_t assetName;
+    uint16_t contractIndex;
+    bool TypeOfToken;                      // Expensive token or general token
 };
 
 struct qpoolenableToken_output
@@ -104,17 +120,20 @@ struct GetNumberOfEnableToken_input
 
 struct GetNumberOfEnableToken_output
 {
-    uint16_t NumberOfEnableToken;
+    uint16_t NumberOfEnabledGeneralToken;
+	uint16_t NumberOfEnabledExpensiveToken;
 };
 
 struct GetEnableToken_input 
 {
     uint32_t NumberOfToken;
+    bool TypeOfToken;           //General or Expensive token
 };
 
 struct GetEnableToken_output
 {
     uint64_t assetName;
+    uint16_t contractIndex;
     uint8_t issuer[32];
 };
 
@@ -125,6 +144,9 @@ struct Swap_input {
     uint16_t IndexOfToken2;
 
     uint16_t Poolnum;
+
+    bool TypeOfToken1;
+	bool TypeOfToken2;
 };
 
 struct Swap_output {
@@ -142,7 +164,11 @@ struct PoolList_output {
     uint64_t liquidity3;
     uint64_t liquidity4;
     uint64_t totalAmountOfQPT;
-    uint64_t totalSupplyByQU;
+    
+    uint32_t liquidityForMicrotoken1;
+    uint32_t liquidityForMicrotoken2;
+    uint32_t liquidityForMicrotoken3;
+    uint32_t liquidityForMicrotoken4;
 
     uint16_t IndexOfToken1;
     uint16_t IndexOfToken2;
@@ -156,6 +182,11 @@ struct PoolList_output {
     uint8_t Weight2;
     uint8_t Weight3;
     uint8_t Weight4;
+
+    bool TypeOfToken1;
+    bool TypeOfToken2;
+    bool TypeOfToken3;
+    bool TypeOfToken4;
 };
 
 
@@ -221,14 +252,14 @@ struct BIGMinus_output {
     uint8_t result[128];
 };
 
-struct BIGMultiple_input {
+struct BIGMultiply_input {
     uint8_t alen;
     uint8_t blen;
     uint8_t a[128];
     uint8_t b[128];
 };
 
-struct BIGMultiple_output {
+struct BIGMultiply_output {
     uint8_t resultlen;
     uint8_t result[128];
 };
@@ -300,6 +331,37 @@ struct BIGSmallComparison_output {
     bool result;
 };
 
+struct DepositExpensivetoken_input
+{
+    uint64_t AmountOfToken;
+    uint16_t IndexOfToken;
+};
+
+struct DepositExpensivetoken_output 
+{
+};
+
+struct WithdrawExpensivetoken_input
+{
+    uint64_t AmountOfToken;
+    uint16_t IndexOfToken;
+};
+struct WithdrawExpensivetoken_output
+{
+    
+};
+struct GetAmountOfExpensivetokenUserDeposited_input
+{
+    uint8_t user[32];
+    uint32_t IndexOfToken;
+};
+struct GetAmountOfExpensivetokenUserDeposited_output
+{
+    uint64_t AmountOfExpensiveTokenUserProvided;		// Amount of Expensive Token User provides in the Qpool
+    uint64_t TokenNameOfExpensiveTokenUserProvided; 	// Token name of Expensive Token User provides in the Qpool
+    uint32_t AmountOfMicrotokenOfUser;				// Amount of MicrotokenUser has in the Qpool.            less than 1M
+};
+
 void QpoolCreate(const char* nodeIp, int nodePort,
                     const char* seed,
                     char* nameOfLP,
@@ -310,6 +372,8 @@ void QpoolCreate(const char* nodeIp, int nodePort,
                     int16_t* index_of_token,
                     int64_t* amount_of_token,
                     int8_t* weight_of_token,
+                    int32_t* amount_of_microtoken,
+                    bool* type_of_token,
                     int64_t swap_fee,
                     uint32_t offsetScheduledTick)
 {
@@ -369,28 +433,36 @@ void QpoolCreate(const char* nodeIp, int nodePort,
         packet.ia.IndexOfToken1 = index_of_token[0];
         packet.ia.initialAmount1 = amount_of_token[0];
         packet.ia.Weight1 = weight_of_token[0];
+        packet.ia.initialAmountForMicrotoken1 = amount_of_microtoken[0];
+        packet.ia.TypeOfToken1 = type_of_token[0];
     }
     if(number_of_token > 3) {
         packet.ia.IndexOfToken2 = index_of_token[1];
         packet.ia.initialAmount2 = amount_of_token[1];
         packet.ia.Weight2 = weight_of_token[1];
+        packet.ia.initialAmountForMicrotoken1 = amount_of_microtoken[1];
+        packet.ia.TypeOfToken1 = type_of_token[1];
     }
     if(number_of_token > 4) {
         packet.ia.IndexOfToken3 = index_of_token[2];
         packet.ia.initialAmount3 = amount_of_token[2];
         packet.ia.Weight3 = weight_of_token[2];
+        packet.ia.initialAmountForMicrotoken1 = amount_of_microtoken[2];
+        packet.ia.TypeOfToken1 = type_of_token[2];
     }
     if(number_of_token > 5) {
         packet.ia.IndexOfToken4 = index_of_token[3];
         packet.ia.initialAmount4 = amount_of_token[3];
         packet.ia.Weight4 = weight_of_token[3];
+        packet.ia.initialAmountForMicrotoken1 = amount_of_microtoken[3];
+        packet.ia.TypeOfToken1 = type_of_token[3];
     }
     packet.ia.swapFee = swap_fee;
     printf("%lu\n", packet.ia.swapFee);
-    printf("%lu %u %u\n", packet.ia.initialAmount1, packet.ia.IndexOfToken1, packet.ia.Weight1);
-    printf("%lu %u %u\n", packet.ia.initialAmount2, packet.ia.IndexOfToken2, packet.ia.Weight2);
-    printf("%lu %u %u\n", packet.ia.initialAmount3, packet.ia.IndexOfToken3, packet.ia.Weight3);
-    printf("%lu %u %u\n", packet.ia.initialAmount4, packet.ia.IndexOfToken4, packet.ia.Weight4);
+    printf("%lu %u %u %u %u\n", packet.ia.initialAmount1, packet.ia.IndexOfToken1, packet.ia.Weight1, packet.ia.initialAmountForMicrotoken1, packet.ia.TypeOfToken1);
+    printf("%lu %u %u %u %u\n", packet.ia.initialAmount2, packet.ia.IndexOfToken2, packet.ia.Weight2, packet.ia.initialAmountForMicrotoken2, packet.ia.TypeOfToken2);
+    printf("%lu %u %u %u %u\n", packet.ia.initialAmount3, packet.ia.IndexOfToken3, packet.ia.Weight3, packet.ia.initialAmountForMicrotoken3, packet.ia.TypeOfToken3);
+    printf("%lu %u %u %u %u\n", packet.ia.initialAmount4, packet.ia.IndexOfToken4, packet.ia.Weight4, packet.ia.initialAmountForMicrotoken4, packet.ia.TypeOfToken4);
     
     // sign the packet
     KangarooTwelve((unsigned char*)&packet.transaction,
@@ -547,35 +619,44 @@ void qpoolgetInfor(const char* nodeIp, int nodePort,
         LOG("Address of token1: %u ", pool.IndexOfToken1);
         LOG("Weight of token1: %u ", pool.Weight1);
         LOG("liquidity of token1: %llu\n",  pool.liquidity1);
+        LOG("liquidity of Microtoken for token1: %u\n", pool.liquidityForMicrotoken1);
+        LOG("type of token1: %u\n", pool.TypeOfToken1);
     }
 
     if(pool.NumberOfToken > 3) {
         LOG("Address of token2: %u ", pool.IndexOfToken2);
         LOG("Weight of token2: %u ", pool.Weight2);
         LOG("liquidity of token2: %llu\n",  pool.liquidity2);
+        LOG("liquidity of Microtoken for token2: %u\n", pool.liquidityForMicrotoken2);
+        LOG("type of token2: %u\n", pool.TypeOfToken2);
     }
 
     if(pool.NumberOfToken > 4) {
         LOG("Address of token3: %u ", pool.IndexOfToken3);
         LOG("Weight of token3: %u ", pool.Weight3);
         LOG("liquidity of token3: %llu\n",  pool.liquidity3);
+        LOG("liquidity of Microtoken for token3: %u\n", pool.liquidityForMicrotoken3);
+        LOG("type of token3: %u\n", pool.TypeOfToken3);
     }
 
     if(pool.NumberOfToken > 5) {    
         LOG("Address of token4: %u ", pool.IndexOfToken4);
         LOG("Weight of token4: %u ", pool.Weight4);
         LOG("liquidity of token4: %llu\n",  pool.liquidity4);
+        LOG("liquidity of Microtoken for token4: %u\n", pool.liquidityForMicrotoken4);
+        LOG("type of token4: %u\n", pool.TypeOfToken4);
     }
 
     LOG("Swap fee in pool%u: %llu\n",number_of_pool+1, pool.swapFee);
     LOG("Total Amount Of QPT in pool%u: %llu\n", number_of_pool+1 ,pool.totalAmountOfQPT);
-    LOG("Total value of tokens in pool%u: %llu\n", number_of_pool+1, pool.totalSupplyByQU);
 }
 
 void qpoolenableToken(const char* nodeIp, int nodePort,
                     const char* seed,
                     char* assetname,
                     char* issuerOfAsset,
+                    uint16_t contractIndex,
+                    bool typeoftoken,
                     uint32_t scheduledTickOffset)
 {
     auto qc = make_qc(nodeIp, nodePort);
@@ -626,7 +707,12 @@ void qpoolenableToken(const char* nodeIp, int nodePort,
     // fill the input
     memcpy(&packet.ia.assetName, assetNameS1, 8);
     memcpy(packet.ia.issuer , TokenIssuerPublicKey, 32);
+    packet.ia.contractIndex = contractIndex;
+    packet.ia.TypeOfToken = typeoftoken;
     for(int16_t i = 0 ; i < 32 ; i++) printf("%u ", packet.ia.issuer[i]);
+    printf("\n%llu\n", packet.ia.assetName);
+    printf("%u\n", packet.ia.contractIndex);
+    printf("%u ", packet.ia.TypeOfToken);
     // sign the packet
     KangarooTwelve((unsigned char*)&packet.transaction,
                    sizeof(Transaction) + sizeof(EnableToken_input),
@@ -662,7 +748,6 @@ void qpoolgetnumberofenableToken(const char* nodeIp, int nodePort,
         RequestContractFunction rcf;
     } packet;
 
-
     packet.header.setSize(sizeof(packet));
     packet.header.randomizeDejavu();
     packet.header.setType(RequestContractFunction::type());
@@ -685,14 +770,15 @@ void qpoolgetnumberofenableToken(const char* nodeIp, int nodePort,
         }
         ptr+= header->size();
     }
-    LOG("Number of enable token in pool:  %u\n", result.NumberOfEnableToken);
-
+    LOG("Number of enabled expensive token in pool:  %u\n", result.NumberOfEnabledExpensiveToken);
+    LOG("Number of enabled general token in pool:  %u\n", result.NumberOfEnabledGeneralToken);
 }
 
 
 void qpoolgetenableToken(const char* nodeIp, int nodePort,
                     const char* seed,
                     uint32_t tokenID,
+                    bool typeoftoken,
                     uint32_t scheduledTickOffset)
 {
     auto qc = make_qc(nodeIp, nodePort);
@@ -711,6 +797,7 @@ void qpoolgetenableToken(const char* nodeIp, int nodePort,
     packet.rcf.inputType = qPoolFunctionId::GetEnableToken;
     packet.rcf.contractIndex = QPOOL_CONTRACT_ID;
     packet.input.NumberOfToken = tokenID;
+    packet.input.TypeOfToken = typeoftoken;
     qc->sendData((uint8_t *) &packet, packet.header.size());
     std::vector<uint8_t> buffer;
     qc->receiveDataAll(buffer);
@@ -728,6 +815,7 @@ void qpoolgetenableToken(const char* nodeIp, int nodePort,
         ptr+= header->size();
     }
     LOG("Name of enable token:  %llu\n", result.assetName);
+    LOG("Index of contract issued token:  %u\n", result.contractIndex);
     for(int i = 0 ; i < 32; i++) LOG("%u ", result.issuer[i]);
 }
 
@@ -780,6 +868,8 @@ void qpoolswap(char* nodeIp, int nodePort,
                     uint16_t indexOfToken1,
                     uint16_t indexOfToken2,
                     uint16_t NumberOfPool,
+                    bool typeoftoken1,
+                    bool typeoftoken2,
                     uint32_t scheduledTickOffset)
 {
     auto qc = make_qc(nodeIp, nodePort);
@@ -826,6 +916,8 @@ void qpoolswap(char* nodeIp, int nodePort,
     packet.ia.IndexOfToken1 = indexOfToken1;
     packet.ia.IndexOfToken2 = indexOfToken2;
     packet.ia.Poolnum = NumberOfPool;
+    packet.ia.TypeOfToken1 = typeoftoken1;
+    packet.ia.TypeOfToken2 = typeoftoken2;
     // sign the packet
     KangarooTwelve((unsigned char*)&packet.transaction,
                    sizeof(Transaction) + sizeof(Swap_input),
@@ -848,6 +940,202 @@ void qpoolswap(char* nodeIp, int nodePort,
     printReceipt(packet.transaction, txHash, reinterpret_cast<const uint8_t *>(&packet.ia));
     LOG("run ./qubic-cli [...] -checktxontick %u %s\n", scheduledTick, txHash);
     LOG("to check your tx confirmation status\n");
+}
+
+
+void qpooldepositexpensivetoken(char* nodeIp, int nodePort,
+                    const char* seed,
+                    uint64_t Amountoftoken,
+                    uint16_t indexOfToken,
+                    uint32_t scheduledTickOffset)
+{
+    auto qc = make_qc(nodeIp, nodePort);
+    uint8_t privateKey[32] = {0};
+    uint8_t sourcePublicKey[32] = {0};
+    uint8_t destPublicKey[32] = {0};
+    uint8_t subSeed[32] = {0};
+    uint8_t digest[32] = {0};
+    uint8_t signature[64] = {0};
+    uint8_t TokenIssuerPublicKey[32] = {0};
+    char txHash[128] = {0};
+
+    getSubseedFromSeed((uint8_t*)seed, subSeed);
+    getPrivateKeyFromSubSeed(subSeed, privateKey);
+    getPublicKeyFromPrivateKey(privateKey, sourcePublicKey);
+    getPublicKeyFromIdentity(QPOOL_ADDRESS, destPublicKey);
+    ((uint64_t*)destPublicKey)[0] = QPOOL_CONTRACT_ID;
+    ((uint64_t*)destPublicKey)[1] = 0;
+    ((uint64_t*)destPublicKey)[2] = 0;
+    ((uint64_t*)destPublicKey)[3] = 0;
+    struct {
+        RequestResponseHeader header;
+        Transaction transaction;
+        DepositExpensivetoken_input ia;
+        uint8_t sig[SIGNATURE_SIZE];
+    } packet;
+    memcpy(packet.transaction.sourcePublicKey, sourcePublicKey, 32);
+    memcpy(packet.transaction.destinationPublicKey, destPublicKey, 32);
+    packet.transaction.amount = QPOOL_EXPENSIVE_TOKEN_DEPOSIT_FEE;
+    uint32_t scheduledTick = 0;
+    if (scheduledTickOffset < 50000){
+        uint32_t currentTick = getTickNumberFromNode(qc);
+        scheduledTick = currentTick + scheduledTickOffset;
+    } else {
+        scheduledTick = scheduledTickOffset;
+    }
+    packet.transaction.tick = scheduledTick;
+    packet.transaction.inputType = QPOOL_DEPOSIT_EXPENSIVE_TOKEN;
+    packet.transaction.inputSize = sizeof(DepositExpensivetoken_input);
+
+    // fill the input
+    packet.ia.AmountOfToken = Amountoftoken;
+    packet.ia.IndexOfToken = indexOfToken;
+    // sign the packet
+    KangarooTwelve((unsigned char*)&packet.transaction,
+                   sizeof(Transaction) + sizeof(DepositExpensivetoken_input),
+                   digest,
+                   32);
+    sign(subSeed, sourcePublicKey, digest, signature);
+    memcpy(packet.sig, signature, SIGNATURE_SIZE);
+    // set header
+    packet.header.setSize(sizeof(packet.header)+sizeof(Transaction)+sizeof(DepositExpensivetoken_input)+ SIGNATURE_SIZE);
+    packet.header.zeroDejavu();
+    packet.header.setType(BROADCAST_TRANSACTION);
+
+    qc->sendData((uint8_t *) &packet, packet.header.size());
+    KangarooTwelve((unsigned char*)&packet.transaction,
+                   sizeof(Transaction)+sizeof(DepositExpensivetoken_input)+ SIGNATURE_SIZE,
+                   digest,
+                   32); // recompute digest for txhash
+    getTxHashFromDigest(digest, txHash);
+    LOG("Transaction has been sent!\n");
+    printReceipt(packet.transaction, txHash, reinterpret_cast<const uint8_t *>(&packet.ia));
+    LOG("run ./qubic-cli [...] -checktxontick %u %s\n", scheduledTick, txHash);
+    LOG("to check your tx confirmation status\n");
+}
+
+void qpoolwithdrawexpensivetoken(char* nodeIp, int nodePort,
+                    const char* seed,
+                    uint64_t Amountoftoken,
+                    uint16_t indexOfToken,
+                    uint32_t scheduledTickOffset)
+{
+    auto qc = make_qc(nodeIp, nodePort);
+    uint8_t privateKey[32] = {0};
+    uint8_t sourcePublicKey[32] = {0};
+    uint8_t destPublicKey[32] = {0};
+    uint8_t subSeed[32] = {0};
+    uint8_t digest[32] = {0};
+    uint8_t signature[64] = {0};
+    uint8_t TokenIssuerPublicKey[32] = {0};
+    char txHash[128] = {0};
+
+    getSubseedFromSeed((uint8_t*)seed, subSeed);
+    getPrivateKeyFromSubSeed(subSeed, privateKey);
+    getPublicKeyFromPrivateKey(privateKey, sourcePublicKey);
+    getPublicKeyFromIdentity(QPOOL_ADDRESS, destPublicKey);
+    ((uint64_t*)destPublicKey)[0] = QPOOL_CONTRACT_ID;
+    ((uint64_t*)destPublicKey)[1] = 0;
+    ((uint64_t*)destPublicKey)[2] = 0;
+    ((uint64_t*)destPublicKey)[3] = 0;
+    struct {
+        RequestResponseHeader header;
+        Transaction transaction;
+        WithdrawExpensivetoken_input ia;
+        uint8_t sig[SIGNATURE_SIZE];
+    } packet;
+    memcpy(packet.transaction.sourcePublicKey, sourcePublicKey, 32);
+    memcpy(packet.transaction.destinationPublicKey, destPublicKey, 32);
+    packet.transaction.amount = QPOOL_EXPENSIVE_TOKEN_DEPOSIT_FEE;
+    uint32_t scheduledTick = 0;
+    if (scheduledTickOffset < 50000){
+        uint32_t currentTick = getTickNumberFromNode(qc);
+        scheduledTick = currentTick + scheduledTickOffset;
+    } else {
+        scheduledTick = scheduledTickOffset;
+    }
+    packet.transaction.tick = scheduledTick;
+    packet.transaction.inputType = QPOOL_WITHDRAW_EXPENSIVE_TOKEN;
+    packet.transaction.inputSize = sizeof(WithdrawExpensivetoken_input);
+
+    // fill the input
+    packet.ia.AmountOfToken = Amountoftoken;
+    packet.ia.IndexOfToken = indexOfToken;
+    // sign the packet
+    KangarooTwelve((unsigned char*)&packet.transaction,
+                   sizeof(Transaction) + sizeof(WithdrawExpensivetoken_input),
+                   digest,
+                   32);
+    sign(subSeed, sourcePublicKey, digest, signature);
+    memcpy(packet.sig, signature, SIGNATURE_SIZE);
+    // set header
+    packet.header.setSize(sizeof(packet.header)+sizeof(Transaction)+sizeof(WithdrawExpensivetoken_input)+ SIGNATURE_SIZE);
+    packet.header.zeroDejavu();
+    packet.header.setType(BROADCAST_TRANSACTION);
+
+    qc->sendData((uint8_t *) &packet, packet.header.size());
+    KangarooTwelve((unsigned char*)&packet.transaction,
+                   sizeof(Transaction)+sizeof(WithdrawExpensivetoken_input)+ SIGNATURE_SIZE,
+                   digest,
+                   32); // recompute digest for txhash
+    getTxHashFromDigest(digest, txHash);
+    LOG("Transaction has been sent!\n");
+    printReceipt(packet.transaction, txHash, reinterpret_cast<const uint8_t *>(&packet.ia));
+    LOG("run ./qubic-cli [...] -checktxontick %u %s\n", scheduledTick, txHash);
+    LOG("to check your tx confirmation status\n");
+}
+
+void qpoolgetamountofexpensivetokenuserdeposited(const char* nodeIp, int nodePort,
+                const char* seed,
+                char* user,
+                uint16_t indexOfToken,
+                uint32_t scheduledTickOffset
+) {
+    auto qc = make_qc(nodeIp, nodePort);
+
+    uint8_t UserPublicKey[32] = {0};
+
+    if (strlen(user) != 60){
+        LOG("WARNING: Stop supporting hex format, please use qubic format 60-char length addresses\n");
+        exit(0);
+    }
+    getPublicKeyFromIdentity(user, UserPublicKey);
+
+    struct {
+        RequestResponseHeader header;
+        RequestContractFunction rcf;
+        GetAmountOfExpensivetokenUserDeposited_input input;
+    } packet;
+
+    packet.header.setSize(sizeof(packet));
+    packet.header.randomizeDejavu();
+    packet.header.setType(RequestContractFunction::type());
+    packet.rcf.inputSize = sizeof(GetAmountOfExpensivetokenUserDeposited_input);
+    packet.rcf.inputType = 6;
+    packet.rcf.contractIndex = QPOOL_CONTRACT_ID;
+    packet.input.IndexOfToken = indexOfToken;
+    memcpy(packet.input.user, UserPublicKey, 32);
+    printf("index of token is %u\n", packet.input.IndexOfToken);
+    for(uint8_t i = 0 ; i < 32; i++) printf("%u ", packet.input.user[i]);
+    qc->sendData((uint8_t *) &packet, packet.header.size());
+    std::vector<uint8_t> buffer;
+    qc->receiveDataAll(buffer);
+    uint8_t* data = buffer.data();
+    int recvByte = buffer.size();
+    int ptr = 0;
+    GetAmountOfExpensivetokenUserDeposited_output result;
+    while (ptr < recvByte)
+    {
+        auto header = (RequestResponseHeader*)(data+ptr);
+        if (header->type() == RespondContractFunction::type()){
+            auto oup = (GetAmountOfExpensivetokenUserDeposited_output*)(data + ptr + sizeof(RequestResponseHeader));
+            result = *oup;
+        }
+        ptr+= header->size();
+    }
+    LOG("Token name of Expensive Token that User provides in the Qpool:  %llu\n", result.TokenNameOfExpensiveTokenUserProvided);
+    LOG("Amount of Expensive Token that User provides in the Qpool:  %llu\n", result.AmountOfExpensiveTokenUserProvided);
+    LOG("Amount of Microtoken that User has in the Qpool:  %u\n", result.AmountOfMicrotokenOfUser);
 }
 
 
@@ -1221,7 +1509,7 @@ void qpoolbigmulti(char* nodeIp, int nodePort,
     struct {
         RequestResponseHeader header;
         Transaction transaction;
-        BIGMultiple_input ia;
+        BIGMultiply_input ia;
         uint8_t sig[SIGNATURE_SIZE];
     } packet;
     memcpy(packet.transaction.sourcePublicKey, sourcePublicKey, 32);
@@ -1236,7 +1524,7 @@ void qpoolbigmulti(char* nodeIp, int nodePort,
     }
     packet.transaction.tick = scheduledTick;
     packet.transaction.inputType = QPOOL_BIGMULTI;
-    packet.transaction.inputSize = sizeof(BIGMultiple_input);
+    packet.transaction.inputSize = sizeof(BIGMultiply_input);
 
     // fill the input
     packet.ia.alen = alen;
@@ -1257,19 +1545,19 @@ void qpoolbigmulti(char* nodeIp, int nodePort,
     }
     // sign the packet
     KangarooTwelve((unsigned char*)&packet.transaction,
-                   sizeof(Transaction) + sizeof(BIGMultiple_input),
+                   sizeof(Transaction) + sizeof(BIGMultiply_input),
                    digest,
                    32);
     sign(subSeed, sourcePublicKey, digest, signature);
     memcpy(packet.sig, signature, SIGNATURE_SIZE);
     // set header
-    packet.header.setSize(sizeof(packet.header)+sizeof(Transaction)+sizeof(BIGMultiple_input)+ SIGNATURE_SIZE);
+    packet.header.setSize(sizeof(packet.header)+sizeof(Transaction)+sizeof(BIGMultiply_input)+ SIGNATURE_SIZE);
     packet.header.zeroDejavu();
     packet.header.setType(BROADCAST_TRANSACTION);
 
     qc->sendData((uint8_t *) &packet, packet.header.size());
     KangarooTwelve((unsigned char*)&packet.transaction,
-                   sizeof(Transaction)+sizeof(BIGMultiple_input)+ SIGNATURE_SIZE,
+                   sizeof(Transaction)+sizeof(BIGMultiply_input)+ SIGNATURE_SIZE,
                    digest,
                    32); // recompute digest for txhash
     getTxHashFromDigest(digest, txHash);

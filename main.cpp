@@ -331,6 +331,8 @@ int run(int argc, char* argv[])
                         g_qpool_index_of_token,
                         g_qpool_amount_of_token,
                         g_qpool_weight_of_token,
+                        g_qpool_amount_of_microtoken,
+                        g_qpool_type_of_token,
                         g_qpool_swap_fee,
                         g_offsetScheduledTick);
         break;
@@ -362,6 +364,8 @@ int run(int argc, char* argv[])
             qpoolenableToken(g_nodeIp, g_nodePort, g_seed,
                          g_qpool_enable_asset_name,
                          g_qpool_enable_asset_issur,
+                         g_qpool_enable_contract_index,
+                         g_qpool_enable_type_of_token,
                          g_offsetScheduledTick);
             break;
         case QPOOL_GET_NUMBER_OF_ENABLE_TOKEN:
@@ -375,6 +379,7 @@ int run(int argc, char* argv[])
         sanityCheckSeed(g_seed);
         qpoolgetenableToken(g_nodeIp, g_nodePort, g_seed,
                         g_qool_tokenID_in_pool,
+                        g_qool_get_eneable_token_type_of_token,
                         g_offsetScheduledTick);
         break;
 
@@ -386,6 +391,32 @@ int run(int argc, char* argv[])
                         g_qpool_swap_index_of_token1,
                         g_qpool_swap_index_of_token2,
                         g_qpool_swap_number_of_pool,
+                        g_qpool_swap_type_of_token1,
+                        g_qpool_swap_type_of_token2,
+                        g_offsetScheduledTick);
+        break;
+        case QPOOL_DEPOSIT_EXPENSIVE_TOKEN:
+        sanityCheckNode(g_nodeIp, g_nodePort);
+        sanityCheckSeed(g_seed);
+        qpooldepositexpensivetoken(g_nodeIp, g_nodePort, g_seed,
+                        g_qool_deposit_expensive_token_amountoftoken,
+                        g_qool_deposit_expensive_token_indexoftoken,
+                        g_offsetScheduledTick);
+        break;
+        case QPOOL_WITHDRAW_EXPENSIVE_TOKEN:
+        sanityCheckNode(g_nodeIp, g_nodePort);
+        sanityCheckSeed(g_seed);
+        qpoolwithdrawexpensivetoken(g_nodeIp, g_nodePort, g_seed,
+                        g_qool_deposit_expensive_token_amountoftoken,
+                        g_qool_deposit_expensive_token_indexoftoken,
+                        g_offsetScheduledTick);
+        break;
+        case QPOOL_GET_AMOUNT_OF_EXPENSIVE_TOKEN_USER_DEPOSITED:
+        sanityCheckNode(g_nodeIp, g_nodePort);
+        sanityCheckSeed(g_seed);
+        qpoolgetamountofexpensivetokenuserdeposited(g_nodeIp, g_nodePort, g_seed,
+                        g_qpool_get_amount_of_expensive_token_user,
+                        g_qool_get_amount_of_expensive_token_indexoftoken,
                         g_offsetScheduledTick);
         break;
         case MAKE_PROPOSAL:

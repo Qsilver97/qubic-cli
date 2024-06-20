@@ -728,8 +728,10 @@ void parseArgument(int argc, char** argv){
             for(int j = 0 ; j < g_qpool_create_number_of_token - 2; j++) g_qpool_index_of_token[j] = charToNumber(argv[i+j+6]);
             for(int j = 0 ; j < g_qpool_create_number_of_token - 2; j++) g_qpool_amount_of_token[j] = charToNumber(argv[i+j+(g_qpool_create_number_of_token-2)+6]);
             for(int j = 0 ; j < g_qpool_create_number_of_token - 2; j++) g_qpool_weight_of_token[j] = charToNumber(argv[i+j+(g_qpool_create_number_of_token-2)*2+6]);
-            g_qpool_swap_fee = charToNumber(argv[i+(g_qpool_create_number_of_token - 2)*3+6]);
-            i+=(g_qpool_create_number_of_token - 2)*3+7;
+            for(int j = 0 ; j < g_qpool_create_number_of_token - 2; j++) g_qpool_amount_of_microtoken[j] = charToNumber(argv[i+j+(g_qpool_create_number_of_token-2)*3+6]);
+            for(int j = 0 ; j < g_qpool_create_number_of_token - 2; j++) g_qpool_type_of_token[j] = charToNumber(argv[i+j+(g_qpool_create_number_of_token-2)*4+6]);
+            g_qpool_swap_fee = charToNumber(argv[i+(g_qpool_create_number_of_token - 2)*5+6]);
+            i+=(g_qpool_create_number_of_token - 2)*5+7;
             CHECK_OVER_PARAMETERS
             break;
         }
@@ -757,7 +759,9 @@ void parseArgument(int argc, char** argv){
             g_cmd = QPOOL_ENABLE_TOKEN;
             g_qpool_enable_asset_name = argv[i + 1];
             g_qpool_enable_asset_issur = argv[i + 2];
-            i+=3;
+            g_qpool_enable_contract_index = charToNumber(argv[i + 3]);
+            g_qpool_enable_type_of_token = charToNumber(argv[i + 4]);
+            i+=5;
             CHECK_OVER_PARAMETERS
             break;
         }
@@ -765,7 +769,8 @@ void parseArgument(int argc, char** argv){
         {
             g_cmd = QPOOL_GET_ENABLE_TOKEN;
             g_qool_tokenID_in_pool = charToNumber(argv[i + 1]);
-            i+=2;
+            g_qool_get_eneable_token_type_of_token = charToNumber(argv[i + 2]);
+            i+=3;
             CHECK_OVER_PARAMETERS
             break;
         }
@@ -783,7 +788,9 @@ void parseArgument(int argc, char** argv){
             g_qpool_swap_index_of_token1 = charToNumber(argv[i + 2]);
             g_qpool_swap_index_of_token2 = charToNumber(argv[i + 3]);
             g_qpool_swap_number_of_pool = charToNumber(argv[i + 4]);
-            i+=5;
+            g_qpool_swap_type_of_token1 = charToNumber(argv[i + 5]);
+            g_qpool_swap_type_of_token2 = charToNumber(argv[i + 6]);
+            i+=7;
             CHECK_OVER_PARAMETERS
             break;
         }
@@ -976,6 +983,33 @@ void parseArgument(int argc, char** argv){
 
             for(uint8_t j = 0 ; j < g_qpool_bigoperation_blen; j++) g_qpool_bigoperation_b[j] = charToNumber(argv[i + g_qpool_bigoperation_alen + j + 3]);
             i+=g_qpool_bigoperation_alen + g_qpool_bigoperation_blen + 3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpooldepositexpensivetoken") == 0)
+        {
+            g_cmd = QPOOL_DEPOSIT_EXPENSIVE_TOKEN;
+            g_qool_deposit_expensive_token_amountoftoken = charToNumber(argv[i + 1]);
+            g_qool_deposit_expensive_token_indexoftoken = charToNumber(argv[i + 2]);
+            i+=3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolwithdrawexpensivetoken") == 0)
+        {
+            g_cmd = QPOOL_WITHDRAW_EXPENSIVE_TOKEN;
+            g_qool_deposit_expensive_token_amountoftoken = charToNumber(argv[i + 1]);
+            g_qool_deposit_expensive_token_indexoftoken = charToNumber(argv[i + 2]);
+            i+=3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolGetAmountOfExpensiveTokenUserDeposited") == 0)
+        {   
+            g_cmd = QPOOL_GET_AMOUNT_OF_EXPENSIVE_TOKEN_USER_DEPOSITED;
+            g_qpool_get_amount_of_expensive_token_user = argv[i + 1];
+            g_qool_get_amount_of_expensive_token_indexoftoken = charToNumber(argv[i + 2]);
+            i+=3;
             CHECK_OVER_PARAMETERS
             break;
         }
