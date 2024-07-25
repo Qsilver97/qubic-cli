@@ -6,6 +6,38 @@ SET(FILES ${CMAKE_SOURCE_DIR}/connection.cpp
 		  ${CMAKE_SOURCE_DIR}/nodeUtils.cpp
 		  ${CMAKE_SOURCE_DIR}/walletUtils.cpp
 		  ${CMAKE_SOURCE_DIR}/assetUtils.cpp
-		${CMAKE_SOURCE_DIR}/qubicLogParser.cpp
+		  ${CMAKE_SOURCE_DIR}/qubicLogParser.cpp
+		  ${CMAKE_SOURCE_DIR}/SCUtils.cpp
+		  ${CMAKE_SOURCE_DIR}/quottery.cpp
+		  ${CMAKE_SOURCE_DIR}/qutil.cpp
+		  ${CMAKE_SOURCE_DIR}/qairdrop.cpp
+		  ${CMAKE_SOURCE_DIR}/qpool.cpp
+		  ${CMAKE_SOURCE_DIR}/qx.cpp
 )
-ADD_EXECUTABLE(qubic-cli main.cpp ${FILES})
+SET(HEADER_FILES
+	K12AndKeyUtil.h
+	SCUtils.h
+	argparser.h
+	assetUtil.h
+	connection.h
+	defines.h
+	fourq-qubic.h
+	global.h
+	keyUtils.h
+	logger.h
+	nodeUtils.h
+	prompt.h
+	qubicLogParser.h
+	quottery.h
+	qutil.h
+	sanityCheck.h
+	structs.h
+	utils.h
+	qairdrop.h
+	qpool.h
+	walletUtils.h
+)
+ADD_EXECUTABLE(qubic-cli main.cpp ${FILES} ${HEADER_FILES})
+ADD_LIBRARY(fourq-qubic SHARED fourq-qubic.cpp)
+target_compile_options(fourq-qubic PRIVATE -DBUILD_4Q_LIB)
+

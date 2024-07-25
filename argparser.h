@@ -26,45 +26,103 @@ void print_help(){
     printf("\t-scheduletick <TICK_OFFSET>\n");
     printf("\t\tOffset number of scheduled tick that will perform a transaction (default: 20)\n");
     printf("Command:\n");
+    printf("[WALLET COMMAND]\n");
     printf("\t-showkeys\n");
     printf("\t\tGenerating identity, pubkey key from private key. Private key must be passed either from params or configuration file.\n");
-    printf("\t-getcurrenttick\n");
-    printf("\t\tShow current tick information of a node\n");
+    printf("\t-getbalance <IDENTITY>\n");
+    printf("\t\tBalance of an identity (amount of qubic, number of in/out txs)\n");
+    printf("\t-getasset <IDENTITY>\n");
+    printf("\t\tPrint a list of assets of an identity\n");
+    printf("\t-sendtoaddress <TARGET_IDENTITY> <AMOUNT>\n");
+    printf("\t\tPerform a standard transaction to sendData <AMOUNT> qubic to <TARGET_IDENTITY>. A valid private key and node ip/port are required.\n");
+    printf("\t-sendtoaddressintick <TARGET_IDENTITY> <AMOUNT> <TICK>\n");
+    printf("\t\tPerform a standard transaction to sendData <AMOUNT> qubic to <TARGET_IDENTITY> in a specific <TICK>. A valid private key and node ip/port are required.\n");
+    printf("\t-qutilsendtomanyv1 <FILE>\n");
+    printf("\t\tPerforms multiple transaction within in one tick. <FILE> must contain one ID and amount (space seperated) per line. Max 25 transaction. Fees apply! valid private key and node ip/port are required.\n");
+    printf("\n[BLOCKCHAIN/PROTOCOL COMMAND]\n");
     printf("\t-gettickdata <TICK_NUMBER> <OUTPUT_FILE_NAME>\n");
     printf("\t\tGet tick data and write it to a file. Use -readtickdata to examine the file. valid node ip/port are required.\n");
+    printf("\t-getquorumtick <COMP_LIST_FILE> <TICK_NUMBER>\n");
+    printf("\t\tGet quorum tick data, the summary of quorum tick will be printed, <COMP_LIST_FILE> is fetched by command -getcomputorlist. valid node ip/port are required.\n");
     printf("\t-getcomputorlist <OUTPUT_FILE_NAME>\n");
     printf("\t\tGet of the current epoch. Feed this data to -readtickdata to verify tick data. valid node ip/port are required.\n");
     printf("\t-getnodeiplist\n");
     printf("\t\tPrint a list of node ip from a seed node ip. Valid node ip/port are required.\n");
-    printf("\t-getlogfromnode <PASSCODE_0> <PASSCODE_1> <PASSCODE_2> <PASSCODE_3>\n");
-    printf("\t\tFetch a single log line from the node. Valid node ip/port, passcodes are required.\n");
     printf("\t-checktxontick <TICK_NUMBER> <TX_ID>\n");
     printf("\t\tCheck if a transaction is included in a tick. valid node ip/port are required.\n");
     printf("\t-checktxonfile <TX_ID> <TICK_DATA_FILE>\n");
     printf("\t\tCheck if a transaction is included in a tick (tick data from a file). valid node ip/port are required.\n");
     printf("\t-readtickdata <FILE_NAME> <COMPUTOR_LIST>\n");
     printf("\t\tRead tick data from a file, print the output on screen, COMPUTOR_LIST is required if you need to verify block data\n");
-    printf("\t-getbalance <IDENTITY>\n");
-    printf("\t\tBalance of an identity (amount of qubic, number of in/out txs)\n");
-    printf("\t-getownedasset <IDENTITY>\n");
-    printf("\t\tPrint OWNED asset of an identity\n");
-    printf("\t-sendtoaddress <TARGET_IDENTITY> <AMOUNT>\n");
-    printf("\t\tPerform a normal transaction to sendData <AMOUNT> qubic to <TARGET_IDENTITY>. valid private key and node ip/port are required.\n");
     printf("\t-sendcustomtransaction <TARGET_IDENTITY> <TX_TYPE> <AMOUNT> <EXTRA_BYTE_SIZE> <EXTRA_BYTE_IN_HEX>\n");
     printf("\t\tPerform a custom transaction (IPO, querying smart contract), valid private key and node ip/port are required.\n");
-    printf("\t-sendspecialcommand <COMMAND_IN_NUMBER> \n");
-    printf("\t\tPerform a special command to node, valid private key and node ip/port are required.\t\n");
-    printf("\t-sendrawpacket <DATA_IN_HEX> <SIZE>\n");
-    printf("\t\tSend a raw packet to nodeip. Valid node ip/port are required.\n");
+    printf("\t-dumpspectrumfile <SPECTRUM_BINARY_FILE> <OUTPUT_CSV_FILE>\n");
+    printf("\t\tDump spectrum file into csv.\n");
+    printf("\t-dumpuniversefile <UNIVERSE_BINARY_FILE> <OUTPUT_CSV_FILE>\n");
+    printf("\t\tDump spectrum file into csv.\n");
+    printf("\t-makeipobid <CONTRACT_INDEX> <NUMBER_OF_SHARE> <PRICE_PER_SHARE>\n");
+    printf("\t\tParticipating IPO (dutch auction). valid private key and node ip/port, CONTRACT_INDEX are required.\n");
+    printf("\t-getipostatus <CONTRACT_INDEX>\n");
+    printf("\t\tView IPO status. valid node ip/port, CONTRACT_INDEX are required.\n");
+    printf("\t-getsysteminfo\n");
+    printf("\t\tView Current System Status. Includes initial tick, random mining seed, epoch info.\n");
     printf("\t-publishproposal \n");
     printf("\t\t(on development)\n");
-    printf("\t-qxtransfershare <POSSESSED_IDENTITY> <NEW_OWNER_IDENTITY> <AMOUNT_OF_SHARE>\n");
-    printf("\t\tTransfer Qx's shares to new owner. valid private key and node ip/port, POSSESSED_IDENTITY are required.\n");
-    printf("\t\t(if you set -scheduletick larger than 50000, the tool will be forced to send the tx at that tick)\n");
+
+    printf("\n[NODE COMMAND]\n");
+    printf("\t-getcurrenttick\n");
+    printf("\t\tShow current tick information of a node\n");
+    printf("\t-sendspecialcommand <COMMAND_IN_NUMBER> \n");
+    printf("\t\tPerform a special command to node, valid private key and node ip/port are required.\t\n");
+    printf("\t-tooglemainaux <MODE_0> <Mode_1> \n");
+    printf("\t\tRemotely toogle Main/Aux mode on node,valid private key and node ip/port are required.\t\n");
+    printf("\t\t<MODE_0> and <MODE_1> value are: MAIN or AUX\t\n");
+    printf("\t-setsolutionthreshold <EPOCH> <SOLUTION_THRESHOLD> \n");
+    printf("\t\tRemotely set solution threshold for future epoch,valid private key and node ip/port are required.\t\n");
+    printf("\t-refreshpeerlist\n");
+    printf("\t\t(equivalent to F4) Remotely refresh the peer list of node, all current connections will be closed after this command is sent, valid private key and node ip/port are required.\t\n");
+    printf("\t-forcenexttick\n");
+    printf("\t\t(equivalent to F5) Remotely force next tick on node to be empty, valid private key and node ip/port are required.\t\n");
+    printf("\t-reissuevote\n");
+    printf("\t\t(equivalent to F9) Remotely re-issue (re-send) vote on node, valid private key and node ip/port are required.\t\n");
+    printf("\t-sendrawpacket <DATA_IN_HEX> <SIZE>\n");
+    printf("\t\tSend a raw packet to nodeip. Valid node ip/port are required.\n");
+    printf("\t-getlogfromnode <PASSCODE_0> <PASSCODE_1> <PASSCODE_2> <PASSCODE_3>\n");
+    printf("\t\tFetch a single log line from the node. Valid node ip/port, passcodes are required.\n");
+    printf("\t-synctime\n");
+    printf("\t\tSync node time with local time, valid private key and node ip/port are required. Make sure that your local time is synced (with NTP)!\t\n");
+
+    printf("\n[QX COMMAND]\n");
+    printf("\t-qxgetfee\n");
+    printf("\t\tShow current Qx fee.\n");
     printf("\t-qxissueasset <ASSET_NAME> <NUMBER_OF_UNIT> <UNIT_OF_MEASUREMENT> <NUM_DECIMAL>\n");
     printf("\t\tCreate an asset via Qx contract.\n");
-    printf("\t-qxtransferasset <ASSET_NAME> <ISSUER_IN_HEX> <POSSESSED_IDENTITY> <NEW_OWNER_IDENTITY> <AMOUNT_OF_SHARE>\n");
+    printf("\t-qxtransferasset <ASSET_NAME> <ISSUER_IN_HEX> <NEW_OWNER_IDENTITY> <AMOUNT_OF_SHARE>\n");
     printf("\t\tTransfer an asset via Qx contract.\n");
+    printf("\t-qxorder add/remove bid/ask [ISSUER (in qubic format)] [ASSET_NAME] [PRICE] [NUMBER_OF_SHARE]\n");
+    printf("\t\tSet order on Qx.\n");
+    printf("\t-qxgetorder entity/asset bid/ask [ISSUER/ENTITY (in qubic format)] [ASSET_NAME (NULL for requesting entity)] [OFFSET]\n");
+    printf("\t\tGet orders on Qx\n");
+
+    printf("\n[QTRY COMMAND]\n");
+    printf("\t-qtrygetfee\n");
+    printf("\t\tShow current qtry fee.\n");
+    printf("\t-qtryissuebet\n");
+    printf("\t\tIssue a bet (prompt mode)\n");
+    printf("\t-qtrygetactivebet\n");
+    printf("\t\tShow all active bet id.\n");
+    printf("\t-qtrygetactivebetbycreator <BET_CREATOR_ID>\n");
+    printf("\t\tShow all active bet id of an ID.\n");
+    printf("\t-qtrygetbetinfo <BET_ID>\n");
+    printf("\t\tGet meta information of a bet\n");
+    printf("\t-qtrygetbetdetail <BET_ID> <OPTION_ID>\n");
+    printf("\t\tGet a list of IDs that bet on <OPTION_ID> of the bet <BET_ID>\n");
+    printf("\t-qtryjoinbet <BET_ID> <NUMBER_OF_BET_SLOT> <AMOUNT_PER_SLOT> <PICKED_OPTION>\n");
+    printf("\t\tJoin a bet\n");
+    printf("\t-qtrypublishresult <BET_ID> <WIN_OPTION>\n");
+    printf("\t\t(Oracle providers only) publish a result for a bet\n");
+    printf("\t-qtrycancelbet <BET_ID>\n");
+    printf("\t\t(Game operator only) cancel a bet\n");
 }
 
 static long long charToNumber(char* a)
@@ -135,12 +193,15 @@ void parseArgument(int argc, char** argv){
     // basic config:
     // -conf , -seed, -nodeip, -nodeport, -scheduletick
     // command:
-    // -showkeys, -getcurrenttick, -gettickdata, -checktxontick, -checktxontickfile, -readtickdata, -getbalance, -getownedasset, -sendtoaddress, -sendcustomtransaction, -sendspecialcommand, -sendrawpacket, -publishproposal, -qxtransfershare
+    // -showkeys, -getcurrenttick, -gettickdata, -checktxontick, -checktxontickfile, -readtickdata, -getbalance, -getasset, -sendtoaddress, -sendcustomtransaction, -sendspecialcommand, -sendrawpacket, -publishproposal
     int i = 1;
     g_cmd = TOTAL_COMMAND;
     while (i < argc)
     {
-        if(strcmp(argv[i], "-help") == 0) {print_help(); exit(0);}
+        /**********************
+         ******BASIC CONFIG****
+         **********************/
+        if(strcmp(argv[i], "-help") == 0 || strcmp(argv[i], "-h") == 0) {print_help(); exit(0);}
         if(strcmp(argv[i], "-conf") == 0)
         {
             g_configFile = argv[i+1];
@@ -171,6 +232,18 @@ void parseArgument(int argc, char** argv){
             i+=2;
             continue;
         }
+
+        if(strcmp(argv[i], "-waituntilfinish") == 0)
+        {
+            g_waitUntilFinish = int(charToNumber(argv[i+1]));
+            i+=2;
+            continue;
+        }
+
+         /**********************
+         ****WALLET COMMAND****
+         **********************/
+
         if(strcmp(argv[i], "-showkeys") == 0)
         {
             g_cmd = SHOW_KEYS;
@@ -178,18 +251,63 @@ void parseArgument(int argc, char** argv){
             CHECK_OVER_PARAMETERS
             break;
         }
-        if(strcmp(argv[i], "-getcurrenttick") == 0)
+
+        if(strcmp(argv[i], "-getbalance") == 0)
         {
-            g_cmd = GET_CURRENT_TICK;
-            i++;
+            g_cmd = GET_BALANCE;
+            g_requestedIdentity = argv[i+1];
+            i+=2;
             CHECK_OVER_PARAMETERS
             break;
         }
+
+        if(strcmp(argv[i], "-getasset") == 0)
+        {
+            g_cmd = GET_ASSET;
+            g_requestedIdentity = argv[i+1];
+            i+=2;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+
+        if(strcmp(argv[i], "-sendtoaddress") == 0)
+        {
+            g_cmd = SEND_COIN;
+            g_targetIdentity = argv[i+1];
+            g_TxAmount = charToNumber(argv[i+2]);
+            i+=3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+
+        if(strcmp(argv[i], "-sendtoaddressintick") == 0)
+        {
+            g_cmd = SEND_COIN_IN_TICK;
+            g_targetIdentity = argv[i+1];
+            g_TxAmount = charToNumber(argv[i+2]);
+            g_TxTick = charToNumber(argv[i+3]);
+            i+=4;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+
+        /********************************************
+         *********BLOCKCHAIN/PROTOCOL COMMAND********
+         ********************************************/
         if(strcmp(argv[i], "-gettickdata") == 0)
         {
             g_cmd = GET_TICK_DATA;
             g_requestedTickNumber = charToNumber(argv[i+1]);
             g_requestedFileName = argv[i + 2];
+            i+=3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-getquorumtick") == 0)
+        {
+            g_cmd = GET_QUORUM_TICK;
+            g_requestedFileName = argv[i + 1];
+            g_requestedTickNumber = charToNumber(argv[i+2]);
             i+=3;
             CHECK_OVER_PARAMETERS
             break;
@@ -236,42 +354,7 @@ void parseArgument(int argc, char** argv){
             CHECK_OVER_PARAMETERS
             break;
         }
-        if(strcmp(argv[i], "-getbalance") == 0)
-        {
-            g_cmd = GET_BALANCE;
-            g_requestedIdentity = argv[i+1];
-            i+=2;
-            CHECK_OVER_PARAMETERS
-            break;
-        }
-        if(strcmp(argv[i], "-getlogfromnode") == 0)
-        {
-            g_cmd = GET_LOG_FROM_NODE;
-            g_get_log_passcode[0] = charToUnsignedNumber(argv[i+1]);
-            g_get_log_passcode[1] = charToUnsignedNumber(argv[i+2]);
-            g_get_log_passcode[2] = charToUnsignedNumber(argv[i+3]);
-            g_get_log_passcode[3] = charToUnsignedNumber(argv[i+4]);
-            i+=5;
-            CHECK_OVER_PARAMETERS
-            break;
-        }
-        if(strcmp(argv[i], "-getownedasset") == 0)
-        {
-            g_cmd = GET_ASSET;
-            g_requestedIdentity = argv[i+1];
-            i+=2;
-            CHECK_OVER_PARAMETERS
-            break;
-        }
-        if(strcmp(argv[i], "-sendtoaddress") == 0)
-        {
-            g_cmd = SEND_COIN;
-            g_targetIdentity = argv[i+1];
-            g_TxAmount = charToNumber(argv[i+2]);
-            i+=3;
-            CHECK_OVER_PARAMETERS
-            break;
-        }
+
         if(strcmp(argv[i], "-sendcustomtransaction") == 0)
         {
             g_cmd = SEND_CUSTOM_TX;
@@ -284,11 +367,138 @@ void parseArgument(int argc, char** argv){
             CHECK_OVER_PARAMETERS
             break;
         }
+
+        if(strcmp(argv[i], "-dumpspectrumfile") == 0)
+        {
+            g_cmd = DUMP_SPECTRUM_FILE;
+            g_dump_binary_file_input = argv[i+1];
+            g_dump_binary_file_output = argv[i+2];
+            i+=3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+
+        if(strcmp(argv[i], "-dumpuniversefile") == 0)
+        {
+            g_cmd = DUMP_UNIVERSE_FILE;
+            g_dump_binary_file_input = argv[i+1];
+            g_dump_binary_file_output = argv[i+2];
+            i+=3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+
+        if(strcmp(argv[i], "-makeipobid") == 0)
+        {
+            g_cmd = MAKE_IPO_BID;
+            g_ipo_contract_index = charToNumber(argv[i + 1]);
+            g_make_ipo_bid_number_of_share = charToNumber(argv[i+2]);
+            g_make_ipo_bid_price_per_share = charToNumber(argv[i+3]);
+            i+=4;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-getipostatus") == 0)
+        {
+            g_cmd = GET_IPO_STATUS;
+            g_ipo_contract_index = charToNumber(argv[i + 1]);
+            i+=2;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+
+        if(strcmp(argv[i], "-publishproposal") == 0)
+        {
+            LOG("On development\n");
+            exit(0);
+        }
+
+        /**********************
+         *****NODE COMMAND*****
+         **********************/
+
+        if(strcmp(argv[i], "-getsysteminfo") == 0)
+        {
+            g_cmd = GET_SYSTEM_INFO;
+            i++;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-getcurrenttick") == 0)
+        {
+            g_cmd = GET_CURRENT_TICK;
+            i++;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
         if(strcmp(argv[i], "-sendspecialcommand") == 0)
         {
             g_cmd = SEND_SPECIAL_COMMAND;
             g_requestedSpecialCommand = int(charToNumber(argv[i+1]));
             i+=2;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-tooglemainaux") == 0)
+        {
+            g_cmd = TOOGLE_MAIN_AUX;
+            g_requestedSpecialCommand = SPECIAL_COMMAND_TOGGLE_MAIN_MODE_REQUEST;
+            g_toogle_main_aux_0 = argv[i+1];
+            g_toogle_main_aux_1 = argv[i+2];
+            i+=3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-setsolutionthreshold") == 0)
+        {
+            g_cmd = SET_SOLUTION_THRESHOLD;
+            g_requestedSpecialCommand = SPECIAL_COMMAND_SET_SOLUTION_THRESHOLD_REQUEST;
+            g_set_solution_threshold_epoch = charToNumber(argv[i+1]);
+            g_set_solution_threshold_value = charToNumber(argv[i+2]);
+            i+=3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-refreshpeerlist") == 0)
+        {
+            g_cmd = REFRESH_PEER_LIST;
+            g_requestedSpecialCommand = SPECIAL_COMMAND_REFRESH_PEER_LIST;
+            i+=1;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-forcenexttick") == 0)
+        {
+            g_cmd = FORCE_NEXT_TICK;
+            g_requestedSpecialCommand = SPECIAL_COMMAND_FORCE_NEXT_TICK;
+            i+=1;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-reissuevote") == 0)
+        {
+            g_cmd = REISSUE_VOTE;
+            g_requestedSpecialCommand = SPECIAL_COMMAND_REISSUE_VOTE;
+            i+=1;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-makeproposal") == 0)
+        {
+            g_cmd = MAKE_PROPOSAL;
+            g_requestedSpecialCommand = SPECIAL_COMMAND_SET_PROPOSAL_AND_BALLOT_REQUEST;
+            g_proposal_computor = charToNumber(argv[i + 1]);
+            g_proposal_uri = argv[i + 2];
+            i+=3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+
+        if (strcmp(argv[i], "-synctime") == 0)
+        {
+            g_cmd = SYNC_TIME;
+            g_requestedSpecialCommand = SPECIAL_COMMAND_SEND_TIME;
+            i += 1;
             CHECK_OVER_PARAMETERS
             break;
         }
@@ -301,21 +511,32 @@ void parseArgument(int argc, char** argv){
             CHECK_OVER_PARAMETERS
             break;
         }
-        if(strcmp(argv[i], "-publishproposal") == 0)
+
+        if(strcmp(argv[i], "-getlogfromnode") == 0)
         {
-            LOG("On development\n");
-            exit(0);
-        }
-        if(strcmp(argv[i], "-qxtransfershare") == 0)
-        {
-            g_cmd = QX_TRANSFER_QXSHARE;
-            g_qx_share_transfer_possessed_identity = argv[i+1];
-            g_qx_share_transfer_new_owner_identity = argv[i+2];
-            g_qx_share_transfer_amount = charToNumber(argv[i+3]);
-            i+=4;
+            g_cmd = GET_LOG_FROM_NODE;
+            g_get_log_passcode[0] = charToUnsignedNumber(argv[i+1]);
+            g_get_log_passcode[1] = charToUnsignedNumber(argv[i+2]);
+            g_get_log_passcode[2] = charToUnsignedNumber(argv[i+3]);
+            g_get_log_passcode[3] = charToUnsignedNumber(argv[i+4]);
+            i+=5;
             CHECK_OVER_PARAMETERS
             break;
         }
+
+        if(strcmp(argv[i], "-getminingscoreranking") == 0)
+        {
+            g_cmd = GET_MINING_SCORE_RANKING;
+            g_requestedSpecialCommand = SPECIAL_COMMAND_GET_MINING_SCORE_RANKING;
+            i++;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+
+        /**********************
+         ******QX COMMAND******
+         **********************/
+
         if(strcmp(argv[i], "-qxissueasset") == 0)
         {
             g_cmd = QX_ISSUE_ASSET;
@@ -332,10 +553,463 @@ void parseArgument(int argc, char** argv){
             g_cmd = QX_TRANSFER_ASSET;
             g_qx_asset_transfer_asset_name = argv[i+1];
             g_qx_asset_transfer_issuer_in_hex = argv[i+2];
-            g_qx_asset_transfer_possessed_identity = argv[i+3];
-            g_qx_asset_transfer_new_owner_identity = argv[i+4];
-            g_qx_asset_transfer_amount = charToNumber(argv[i+5]);
+            g_qx_asset_transfer_new_owner_identity = argv[i+3];
+            g_qx_asset_transfer_amount = charToNumber(argv[i+4]);
+            i+=5;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+
+        if(strcmp(argv[i], "-qxgetfee") == 0)
+        {
+            g_cmd = PRINT_QX_FEE;
+            i+=1;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+
+        if(strcmp(argv[i], "-qxorder") == 0)
+        {
+            g_cmd = QX_ORDER;
+            g_qx_command_1 = argv[i+1];
+            g_qx_command_2 = argv[i+2];
+            g_qx_issuer = argv[i+3];
+            g_qx_asset_name = argv[i+4];
+            g_qx_price = charToNumber(argv[i+5]);
+            g_qx_number_of_share = charToNumber(argv[i+6]);
+            i+=7;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qxgetorder") == 0)
+        {
+            g_cmd = QX_GET_ORDER;
+            g_qx_command_1 = argv[i+1];
+            g_qx_command_2 = argv[i+2];
+            g_qx_issuer = argv[i+3];
+            g_qx_asset_name = argv[i+4];
+            g_qx_offset = charToNumber(argv[i+5]);
             i+=6;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+
+        /**********************
+         ******QTRY COMMAND****
+         **********************/
+
+        if(strcmp(argv[i], "-qtryissuebet") == 0)
+        {
+            g_cmd = QUOTTERY_ISSUE_BET;
+            i+=1;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qtryjoinbet") == 0)
+        {
+            g_cmd = QUOTTERY_JOIN_BET;
+            g_quottery_bet_id = charToNumber(argv[i + 1]);
+            g_quottery_number_bet_slot = charToNumber(argv[i+2]);
+            g_quottery_amount_per_bet_slot = charToNumber(argv[i+3]);
+            g_quottery_picked_option = charToNumber(argv[i+4]);
+            i+=5;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qtrygetbetinfo") == 0)
+        {
+            g_cmd = QUOTTERY_GET_BET_INFO;
+            g_quottery_bet_id = charToNumber(argv[i + 1]);
+            i+=2;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qtrygetbetdetail") == 0)
+        {
+            g_cmd = QUOTTERY_GET_BET_DETAIL;
+            g_quottery_bet_id = charToNumber(argv[i + 1]);
+            g_quottery_option_id = charToNumber(argv[i + 2]);
+            i+=3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qtrygetactivebet") == 0)
+        {
+            g_cmd = QUOTTERY_GET_ACTIVE_BET;
+            i+=1;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qtrygetactivebetbycreator") == 0)
+        {
+            g_cmd = QUOTTERY_GET_ACTIVE_BET_BY_CREATOR;
+            g_quottery_creator_id = argv[i+1];
+            i+=2;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qtrygetfee") == 0)
+        {
+            g_cmd = QUOTTERY_GET_BET_FEE;
+            i+=1;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qtrypublishresult") == 0)
+        {
+            g_cmd = QUOTTERY_PUBLISH_RESULT;
+            g_quottery_bet_id = charToNumber(argv[i + 1]);
+            g_quottery_option_id = charToNumber(argv[i + 2]);
+            i+=3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qtrycancelbet") == 0)
+        {
+            g_cmd = QUOTTERY_CANCEL_BET;
+            g_quottery_bet_id = charToNumber(argv[i + 1]);
+            i+=2;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qutilsendtomanyv1") == 0)
+        {
+            g_cmd = QUTIL_SEND_TO_MANY_V1;
+            g_qutil_sendtomanyv1_payout_list_file = argv[i + 1];
+            i+=2;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qairdropstartairdrop") == 0)
+        {
+            g_cmd = QAIRDROP_START_AIRDROP;
+            g_airdrop_assetName = argv[i+1];
+            g_airdrop_numberOfShares = charToNumber(argv[i+2]);
+            g_airdrop_unitOfMeasurement = argv[i+3];
+            g_airdrop_numberOfDecimalPlaces = charToNumber(argv[i+4]);
+            i+=5;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qairdroptransferasset") == 0)
+        {
+            g_cmd = QARIDROP_TRANSFER_ASSET;
+            g_qairdrop_asset_transfer_asset_name = argv[i + 1];
+            g_qairdrop_asset_issuer = argv[i + 2];
+            i+=3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qairdroponetransferasset") == 0)
+        {
+            g_cmd = QARIDROP_ONE_TRANSFER_ASSET;
+            g_qairdrop_one_asset_transfer_asset_name = argv[i+1];
+            g_qairdrop_one_asset_transfer_issuer_in_hex = argv[i+2];
+            g_qairdrop_one_asset_transfer_new_owner_identity = argv[i+3];
+            g_qairdrop_one_asset_transfer_amount = charToNumber(argv[i+4]);
+            i+=5;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolcreate") == 0)
+        {
+            g_cmd = QPOOL_CREATE;
+            g_qpool_LPname = argv[i+1];
+            g_qpool_create_number_of_token = charToNumber(argv[i+2]);
+            if(g_qpool_create_number_of_token > 6 || g_qpool_create_number_of_token < 2) {
+                \
+                LOG("Overflow maximum number of token for a pool"); \
+                exit(1); \
+            }
+            g_qpool_amount_of_qwallet = charToNumber(argv[i+3]);
+            g_qpool_weight_of_qwallet = charToNumber(argv[i+4]);
+            g_qpool_amount_of_qu = charToNumber(argv[i+5]);
+
+            for(int j = 0 ; j < g_qpool_create_number_of_token - 2; j++) g_qpool_index_of_token[j] = charToNumber(argv[i+j+6]);
+            for(int j = 0 ; j < g_qpool_create_number_of_token - 2; j++) g_qpool_amount_of_token[j] = charToNumber(argv[i+j+(g_qpool_create_number_of_token-2)+6]);
+            for(int j = 0 ; j < g_qpool_create_number_of_token - 2; j++) g_qpool_weight_of_token[j] = charToNumber(argv[i+j+(g_qpool_create_number_of_token-2)*2+6]);
+            for(int j = 0 ; j < g_qpool_create_number_of_token - 2; j++) g_qpool_amount_of_microtoken[j] = charToNumber(argv[i+j+(g_qpool_create_number_of_token-2)*3+6]);
+            for(int j = 0 ; j < g_qpool_create_number_of_token - 2; j++) g_qpool_type_of_token[j] = charToNumber(argv[i+j+(g_qpool_create_number_of_token-2)*4+6]);
+            g_qpool_swap_fee = charToNumber(argv[i+(g_qpool_create_number_of_token - 2)*5+6]);
+            i+=(g_qpool_create_number_of_token - 2)*5+7;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolissueasset") == 0)
+        {
+            g_cmd = QPOOL_ISSUE_ASSET;
+            g_pool_assetName = argv[i+1];
+            g_pool_numberOfShares = charToNumber(argv[i+2]);
+            g_pool_unitOfMeasurement = argv[i+3];
+            g_pool_numberOfDecimalPlaces = charToNumber(argv[i+4]);
+            i+=5;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolgetinfor") == 0)
+        {
+            g_cmd = QPOOL_GET_INFOR;
+            g_qpool_get_infor_number_of_pool = charToNumber(argv[i + 1]);
+            i+=2;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolenabletoken") == 0)
+        {
+            g_cmd = QPOOL_ENABLE_TOKEN;
+            g_qpool_enable_asset_name = argv[i + 1];
+            g_qpool_enable_asset_issur = argv[i + 2];
+            g_qpool_enable_contract_index = charToNumber(argv[i + 3]);
+            g_qpool_enable_type_of_token = charToNumber(argv[i + 4]);
+            i+=5;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolgetenabletoken") == 0)
+        {
+            g_cmd = QPOOL_GET_ENABLE_TOKEN;
+            g_qool_tokenID_in_pool = charToNumber(argv[i + 1]);
+            g_qool_get_eneable_token_type_of_token = charToNumber(argv[i + 2]);
+            i+=3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolgetnumberofenabletoken") == 0)
+        {
+            g_cmd = QPOOL_GET_NUMBER_OF_ENABLE_TOKEN;
+            i+=1;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolswap") == 0)
+        {
+            g_cmd = QPOOL_SWAP;
+            g_qpool_swap_amount_of_token1 = charToNumber(argv[i + 1]);
+            g_qpool_swap_index_of_token1 = charToNumber(argv[i + 2]);
+            g_qpool_swap_index_of_token2 = charToNumber(argv[i + 3]);
+            g_qpool_swap_number_of_pool = charToNumber(argv[i + 4]);
+            g_qpool_swap_type_of_token1 = charToNumber(argv[i + 5]);
+            g_qpool_swap_type_of_token2 = charToNumber(argv[i + 6]);
+            i+=7;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolbiggetstatus") == 0)
+        {
+            g_cmd = QPOOL_BIGNUMBER_GET_STATUS;
+            i+=1;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolbignumbertostring") == 0)
+        {
+            g_cmd = QPOOL_BIGNUMBER_TO_STRING;
+            g_qpool_bignumber_to_string = charToNumber(argv[i + 1]);
+            i+=2;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolbigstringtonumber") == 0)
+        {
+            g_cmd = QPOOL_BIGSTRING_TO_NUMBER;
+            g_qpool_bigstring_to_number_length = charToNumber(argv[i + 1]);
+            if(strcmp(argv[i + 2], "-") == 0) {
+                g_qpool_bigstring_to_numbers[0] = 45;    // ASCII value of '-' is 45
+                for(uint8_t j = 1; j < g_qpool_bigstring_to_number_length; j++) g_qpool_bigstring_to_numbers[j] = charToNumber(argv[i + j + 2]);
+            }
+            else {
+                for(uint8_t j = 0; j < g_qpool_bigstring_to_number_length; j++) g_qpool_bigstring_to_numbers[j] = charToNumber(argv[i + j + 2]);
+            }
+            i+=g_qpool_bigstring_to_number_length + 2;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolbigplus") == 0)
+        {
+            g_cmd = QPOOL_BIGPLUS;
+            g_qpool_bigoperation_alen = charToNumber(argv[i + 1]);
+
+            for(uint8_t j = 0 ; j < g_qpool_bigoperation_alen; j++) g_qpool_bigoperation_a[j] = charToNumber(argv[i + j + 2]);
+
+            g_qpool_bigoperation_blen = charToNumber(argv[i + g_qpool_bigoperation_alen + 2]);
+
+            for(uint8_t j = 0 ; j < g_qpool_bigoperation_blen; j++) g_qpool_bigoperation_b[j] = charToNumber(argv[i + g_qpool_bigoperation_alen + j + 3]);
+            
+            i+=g_qpool_bigoperation_alen + g_qpool_bigoperation_blen + 3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolbigminus") == 0)
+        {
+            g_cmd = QPOOL_BIGMINUS;
+            g_qpool_bigoperation_alen = charToNumber(argv[i + 1]);
+
+            for(uint8_t j = 0 ; j < g_qpool_bigoperation_alen; j++) g_qpool_bigoperation_a[j] = charToNumber(argv[i + j + 2]);
+
+            g_qpool_bigoperation_blen = charToNumber(argv[i + g_qpool_bigoperation_alen + 2]);
+
+            for(uint8_t j = 0 ; j < g_qpool_bigoperation_blen; j++) g_qpool_bigoperation_b[j] = charToNumber(argv[i + g_qpool_bigoperation_alen + j + 3]);
+            
+            i+=g_qpool_bigoperation_alen + g_qpool_bigoperation_blen + 3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolbigmultiple") == 0)
+        {
+            g_cmd = QPOOL_BIGMULTIPLE;
+            g_qpool_bigoperation_alen = charToNumber(argv[i + 1]);
+            if(strcmp(argv[i + 2], "-") == 0) {
+                g_qpool_bigoperation_a[0] = 45;
+                for(uint8_t j = 1 ; j < g_qpool_bigoperation_alen; j++) g_qpool_bigoperation_a[j] = charToNumber(argv[i + j + 2]);
+            }
+            else {
+                for(uint8_t j = 0 ; j < g_qpool_bigoperation_alen; j++) g_qpool_bigoperation_a[j] = charToNumber(argv[i + j + 2]);
+            }
+
+            g_qpool_bigoperation_blen = charToNumber(argv[i + g_qpool_bigoperation_alen + 2]);
+
+            if(strcmp(argv[i + g_qpool_bigoperation_alen + 3], "-") == 0) {
+                g_qpool_bigoperation_b[0] = 45;
+                for(uint8_t j = 1 ; j < g_qpool_bigoperation_blen; j++) g_qpool_bigoperation_b[j] = charToNumber(argv[i + g_qpool_bigoperation_alen + j + 3]);
+            }
+            else {
+                for(uint8_t j = 0 ; j < g_qpool_bigoperation_blen; j++) g_qpool_bigoperation_b[j] = charToNumber(argv[i + g_qpool_bigoperation_alen + j + 3]);
+            }
+            i+=g_qpool_bigoperation_alen + g_qpool_bigoperation_blen + 3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolbigdivide") == 0)
+        {
+            g_cmd = QPOOL_BIGDIV;
+            g_qpool_bigoperation_alen = charToNumber(argv[i + 1]);
+            if(strcmp(argv[i + 2], "-") == 0) {
+                g_qpool_bigoperation_a[0] = 45;
+                for(uint8_t j = 1 ; j < g_qpool_bigoperation_alen; j++) g_qpool_bigoperation_a[j] = charToNumber(argv[i + j + 2]);
+            }
+            else {
+                for(uint8_t j = 0 ; j < g_qpool_bigoperation_alen; j++) g_qpool_bigoperation_a[j] = charToNumber(argv[i + j + 2]);
+            }
+
+            g_qpool_bigoperation_blen = charToNumber(argv[i + g_qpool_bigoperation_alen + 2]);
+
+            if(strcmp(argv[i + g_qpool_bigoperation_alen + 3], "-") == 0) {
+                g_qpool_bigoperation_b[0] = 45;
+                for(uint8_t j = 1 ; j < g_qpool_bigoperation_blen; j++) g_qpool_bigoperation_b[j] = charToNumber(argv[i + g_qpool_bigoperation_alen + j + 3]);
+            }
+            else {
+                for(uint8_t j = 0 ; j < g_qpool_bigoperation_blen; j++) g_qpool_bigoperation_b[j] = charToNumber(argv[i + g_qpool_bigoperation_alen + j + 3]);
+            }
+            i+=g_qpool_bigoperation_alen + g_qpool_bigoperation_blen + 3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolbigmodulus") == 0)
+        {
+            g_cmd = QPOOL_BIGDMODULUS;
+            g_qpool_bigoperation_alen = charToNumber(argv[i + 1]);
+            if(strcmp(argv[i + 2], "-") == 0) {
+                g_qpool_bigoperation_a[0] = 45;
+                for(uint8_t j = 1 ; j < g_qpool_bigoperation_alen; j++) g_qpool_bigoperation_a[j] = charToNumber(argv[i + j + 2]);
+            }
+            else {
+                for(uint8_t j = 0 ; j < g_qpool_bigoperation_alen; j++) g_qpool_bigoperation_a[j] = charToNumber(argv[i + j + 2]);
+            }
+
+            g_qpool_bigoperation_blen = charToNumber(argv[i + g_qpool_bigoperation_alen + 2]);
+
+            if(strcmp(argv[i + g_qpool_bigoperation_alen + 3], "-") == 0) {
+                g_qpool_bigoperation_b[0] = 45;
+                for(uint8_t j = 1 ; j < g_qpool_bigoperation_blen; j++) g_qpool_bigoperation_b[j] = charToNumber(argv[i + g_qpool_bigoperation_alen + j + 3]);
+            }
+            else {
+                for(uint8_t j = 0 ; j < g_qpool_bigoperation_blen; j++) g_qpool_bigoperation_b[j] = charToNumber(argv[i + g_qpool_bigoperation_alen + j + 3]);
+            }
+            i+=g_qpool_bigoperation_alen + g_qpool_bigoperation_blen + 3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolbigorequalcomparison") == 0)
+        {
+            g_cmd = QPOOL_BIGOREQUALCOMPARISON;
+            g_qpool_bigoperation_alen = charToNumber(argv[i + 1]);
+            
+            for(uint8_t j = 0 ; j < g_qpool_bigoperation_alen; j++) g_qpool_bigoperation_a[j] = charToNumber(argv[i + j + 2]);
+
+            g_qpool_bigoperation_blen = charToNumber(argv[i + g_qpool_bigoperation_alen + 2]);
+
+            for(uint8_t j = 0 ; j < g_qpool_bigoperation_blen; j++) g_qpool_bigoperation_b[j] = charToNumber(argv[i + g_qpool_bigoperation_alen + j + 3]);
+            i+=g_qpool_bigoperation_alen + g_qpool_bigoperation_blen + 3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolsmallorequalcomparison") == 0)
+        {
+            g_cmd = QPOOL_SMALLOREQUALCOMPARISON;
+            g_qpool_bigoperation_alen = charToNumber(argv[i + 1]);
+            
+            for(uint8_t j = 0 ; j < g_qpool_bigoperation_alen; j++) g_qpool_bigoperation_a[j] = charToNumber(argv[i + j + 2]);
+
+            g_qpool_bigoperation_blen = charToNumber(argv[i + g_qpool_bigoperation_alen + 2]);
+
+            for(uint8_t j = 0 ; j < g_qpool_bigoperation_blen; j++) g_qpool_bigoperation_b[j] = charToNumber(argv[i + g_qpool_bigoperation_alen + j + 3]);
+            i+=g_qpool_bigoperation_alen + g_qpool_bigoperation_blen + 3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolbigcomparison") == 0)
+        {
+            g_cmd = QPOOL_BIGCOMPARISON;
+            g_qpool_bigoperation_alen = charToNumber(argv[i + 1]);
+            
+            for(uint8_t j = 0 ; j < g_qpool_bigoperation_alen; j++) g_qpool_bigoperation_a[j] = charToNumber(argv[i + j + 2]);
+
+            g_qpool_bigoperation_blen = charToNumber(argv[i + g_qpool_bigoperation_alen + 2]);
+
+            for(uint8_t j = 0 ; j < g_qpool_bigoperation_blen; j++) g_qpool_bigoperation_b[j] = charToNumber(argv[i + g_qpool_bigoperation_alen + j + 3]);
+            i+=g_qpool_bigoperation_alen + g_qpool_bigoperation_blen + 3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+
+        if(strcmp(argv[i], "-qpoolsmallcomparison") == 0)
+        {
+            g_cmd = QPOOL_SMALLCOMPARISON;
+            g_qpool_bigoperation_alen = charToNumber(argv[i + 1]);
+            
+            for(uint8_t j = 0 ; j < g_qpool_bigoperation_alen; j++) g_qpool_bigoperation_a[j] = charToNumber(argv[i + j + 2]);
+
+            g_qpool_bigoperation_blen = charToNumber(argv[i + g_qpool_bigoperation_alen + 2]);
+
+            for(uint8_t j = 0 ; j < g_qpool_bigoperation_blen; j++) g_qpool_bigoperation_b[j] = charToNumber(argv[i + g_qpool_bigoperation_alen + j + 3]);
+            i+=g_qpool_bigoperation_alen + g_qpool_bigoperation_blen + 3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpooldepositexpensivetoken") == 0)
+        {
+            g_cmd = QPOOL_DEPOSIT_EXPENSIVE_TOKEN;
+            g_qool_deposit_expensive_token_amountoftoken = charToNumber(argv[i + 1]);
+            g_qool_deposit_expensive_token_indexoftoken = charToNumber(argv[i + 2]);
+            i+=3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolwithdrawexpensivetoken") == 0)
+        {
+            g_cmd = QPOOL_WITHDRAW_EXPENSIVE_TOKEN;
+            g_qool_deposit_expensive_token_amountoftoken = charToNumber(argv[i + 1]);
+            g_qool_deposit_expensive_token_indexoftoken = charToNumber(argv[i + 2]);
+            i+=3;
+            CHECK_OVER_PARAMETERS
+            break;
+        }
+        if(strcmp(argv[i], "-qpoolGetAmountOfExpensiveTokenUserDeposited") == 0)
+        {   
+            g_cmd = QPOOL_GET_AMOUNT_OF_EXPENSIVE_TOKEN_USER_DEPOSITED;
+            g_qpool_get_amount_of_expensive_token_user = argv[i + 1];
+            g_qool_get_amount_of_expensive_token_indexoftoken = charToNumber(argv[i + 2]);
+            i+=3;
             CHECK_OVER_PARAMETERS
             break;
         }
